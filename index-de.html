@@ -1,0 +1,2068 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gründach Planer | 2LMF PRO</title>
+  <meta name="description" content="Planen und berechnen Sie Ihr Gründach. Premium interaktiver 3D-Schichtsimulator, Echtzeit-Kostenkalkulator und intelligenter Pflanzenauswähler.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Gründach Planer | 2LMF PRO">
+  <meta property="og:description" content="Interaktiver 3D-Simulator und intelligenter Planer für Gründächer. Kosten und Pflanzenspezifikation in Echtzeit ermitteln.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome & Tailwind -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            forest: {
+              50: '#f2f7f4',
+              100: '#e1ede6',
+              200: '#c5dbc9',
+              300: '#9ec0a3',
+              400: '#719e7a',
+              500: '#2d6a4f',
+              600: '#1b4d3e',
+              700: '#143625',
+              800: '#0d2218',
+              900: '#06110c',
+            },
+            mint: {
+              DEFAULT: '#3cd070',
+              50: '#e8fdf0',
+              100: '#c5fbc5',
+              200: '#8df79b',
+              500: '#3cd070',
+              600: '#28be5d',
+              700: '#1fa24f',
+            },
+            terracotta: {
+              DEFAULT: '#c06c50',
+              50: '#fbf5f2',
+              100: '#f6e4dc',
+              500: '#c06c50',
+              600: '#a7563b',
+              700: '#8e442c',
+            },
+            sand: {
+              DEFAULT: '#FAF8F5',
+              50: '#FCFBF9',
+              100: '#FAF8F5',
+              200: '#F0EBE1',
+              300: '#E4DCCD',
+            },
+            clay: '#7a5c44'
+          },
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          boxShadow: {
+            'glass-light': '0 8px 32px 0 rgba(31, 38, 135, 0.05)',
+            'glass-dark': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+            'premium': '0 20px 50px rgba(13, 34, 24, 0.08)',
+            '3d-hover': '0 30px 60px rgba(0, 0, 0, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style type="text/css">
+    /* Global Styles & Variables */
+    :root {
+      --explode: 0.15;
+    }
+    
+    body {
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url('pattern.png');
+      background-size: 800px;
+      background-repeat: repeat;
+      opacity: 0.08; /* Subtle background lines (8% opacity) for the perfect balance of visibility and elegance */
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(60, 208, 112, 0.04) 0%, transparent 50%),
+                  radial-gradient(circle at 10% 80%, rgba(192, 108, 80, 0.03) 0%, transparent 50%);
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .dark .glass-panel {
+      background: rgba(13, 34, 24, 0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Isometric CSS 3D Layer Stack Styles */
+    .isometric-container {
+      perspective: 1200px;
+      transform-style: preserve-3d;
+    }
+
+    .isometric-stack {
+      transform: rotateX(55deg) rotateY(0deg) rotateZ(-40deg);
+      transform-style: preserve-3d;
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: 40px auto;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .isometric-stack:hover {
+      transform: rotateX(50deg) rotateY(0deg) rotateZ(-35deg);
+    }
+
+    .isometric-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: pointer;
+    }
+
+    /* 3D Side panels to make layers look like actual solid slabs */
+    .slab-side-x, .slab-side-y {
+      position: absolute;
+      background: inherit;
+      filter: brightness(0.75);
+      transform-origin: 0 0;
+      pointer-events: none;
+    }
+
+    .slab-side-x {
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 16px; /* Depth of slab */
+      transform: rotateX(-90deg);
+      background: linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.3));
+    }
+
+    .slab-side-y {
+      right: 0;
+      top: 0;
+      width: 16px;
+      height: 100%;
+      transform: rotateY(90deg);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4));
+    }
+
+    /* Dynamic translateZ depending on state variable --explode */
+    .isometric-layer[data-layer="1"] { transform: translateZ(calc(140px + var(--explode) * 160px)); }
+    .isometric-layer[data-layer="2"] { transform: translateZ(calc(110px + var(--explode) * 120px)); }
+    .isometric-layer[data-layer="3"] { transform: translateZ(calc(80px + var(--explode) * 80px)); }
+    .isometric-layer[data-layer="4"] { transform: translateZ(calc(55px + var(--explode) * 50px)); }
+    .isometric-layer[data-layer="5"] { transform: translateZ(calc(30px + var(--explode) * 20px)); }
+    .isometric-layer[data-layer="6"] { transform: translateZ(0px); }
+
+    .isometric-layer:hover {
+      filter: brightness(1.1) contrast(1.05);
+    }
+    .isometric-layer.active-3d {
+      filter: brightness(1.15) contrast(1.1);
+      box-shadow: 0 0 30px rgba(60, 208, 112, 0.4);
+      outline: 2px solid rgba(60, 208, 112, 0.8);
+    }
+
+    /* Layer Textures */
+    .texture-veg {
+      background: radial-gradient(circle, #3cd070 20%, #2d6a4f 100%);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 5px 15px rgba(45, 106, 79, 0.3);
+    }
+    .texture-sub {
+      background: #7a5c44;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+    }
+    .texture-fleece {
+      background: rgba(224, 230, 235, 0.85);
+      border: 1px dashed rgba(255, 255, 255, 0.6);
+    }
+    .texture-drain {
+      background: #37474f;
+      background-image: radial-gradient(circle, #212121 20%, transparent 20%),
+                        radial-gradient(circle, #212121 20%, transparent 20%);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+    }
+    .texture-water {
+      background: linear-gradient(135deg, #1b2a4a 0%, #0d1222 100%);
+      border: 1.5px solid rgba(0, 150, 255, 0.2);
+    }
+    .texture-deck {
+      background: #90a4ae;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Custom range input styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: rgba(45, 106, 79, 0.1);
+      height: 8px;
+      border-radius: 4px;
+    }
+    .dark input[type="range"]::-webkit-slider-runnable-track {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #2d6a4f;
+      border: 2px solid #ffffff;
+      margin-top: -6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: transform 0.1s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    /* Print styling */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-layout {
+        display: block !important;
+      }
+      .print-card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+      }
+      .print-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px !important;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans text-forest-900 bg-sand-50 dark:bg-forest-900 dark:text-forest-100 transition-colors duration-300">
+
+  <!-- NAVBAR -->
+  <nav class="sticky top-0 z-50 w-full glass-panel shadow-premium px-6 py-4 flex items-center justify-between no-print transition-all duration-300">
+    <div class="flex items-center gap-3">
+      <div class="h-10 w-10 rounded-xl bg-forest-600 dark:bg-mint flex items-center justify-center text-white dark:text-forest-900 shadow-md">
+        <i class="fa-solid fa-leaf text-lg animate-pulse"></i>
+      </div>
+      <div>
+        <h1 class="font-serif font-bold text-xl text-forest-700 dark:text-white leading-tight">Gründach Planer</h1>
+        <p class="text-xs font-semibold uppercase tracking-wider" style="font-family:'Orbitron',sans-serif;color:#E67E22;letter-spacing:0.08em;">2LMF <span class="text-gray-900 dark:text-white">PRO</span> Planer</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-6">
+      <a href="#kalkulator" class="hidden md:inline-block text-sm font-semibold hover:text-mint transition-colors">Simulator</a>
+      <a href="#katalog" class="hidden md:inline-block text-sm font-semibold hover:text-mint transition-colors">Pflanzendatenbank</a>
+      <a href="#tutorijal" class="hidden md:inline-block text-sm font-semibold hover:text-mint transition-colors">Aufbau</a>
+
+      <!-- Theme Switcher -->
+      <button onclick="toggleDarkMode()" class="h-10 w-10 rounded-xl border border-forest-100 dark:border-forest-800 flex items-center justify-center hover:bg-forest-50 dark:hover:bg-forest-800 transition-colors" title="Design wechseln">
+        <i id="theme-icon" class="fa-solid fa-moon text-forest-600 dark:text-mint"></i>
+      </button>
+
+      <a href="#kalkulator" class="bg-forest-600 dark:bg-mint text-white dark:text-forest-900 hover:bg-forest-700 dark:hover:bg-mint-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow-md transition-all hover:-translate-y-0.5 flex items-center gap-2">
+        <i class="fa-solid fa-calculator"></i> Kalkulator starten
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="relative overflow-hidden no-print" style="min-height:88vh; background: linear-gradient(rgba(13,43,26,0.68), rgba(13,43,26,0.52)), url('hero.png') center/cover no-repeat;">
+    <div style="position:absolute;inset:0;background-image:url('pattern.png');background-size:800px;opacity:0.07;pointer-events:none;z-index:1;"></div>
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-28 flex flex-col items-center justify-center text-center relative z-10" style="min-height:88vh;">
+      <div class="inline-flex items-center gap-2 bg-white/10 border border-white/25 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
+        <i class="fa-solid fa-star-of-life animate-spin text-2xs"></i> <span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:10px;letter-spacing:0.08em;">2LMF <span style="color:#E67E22;">PRO</span></span> Planer für Österreich & Deutschland
+      </div>
+      <h1 class="font-serif font-extrabold text-4xl sm:text-5xl lg:text-6xl text-white leading-tight mb-6">
+        Gründächer, die <br class="hidden sm:inline">
+        <span style="color:#6ee7b7;">mit der Natur atmen</span>
+      </h1>
+      <p class="text-white/85 max-w-2xl text-base sm:text-lg font-light leading-relaxed mb-10">
+        Geben Sie die Abmessungen ein und wählen Sie Ihre Klimazone. Unser fortschrittlicher Simulator berechnet in Echtzeit genaue Substratmengen, optimalen Pflanzenmix, Kosten und Ökobilanz.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-4 mb-16">
+        <a href="#kalkulator" class="bg-forest-600 hover:bg-forest-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-sm"></i> Simulation starten
+        </a>
+        <a href="#slojevi" class="border border-white/40 hover:bg-white/10 text-white font-bold px-8 py-4 rounded-xl transition-all hover:-translate-y-0.5 flex items-center gap-2">
+          <i class="fa-solid fa-cube text-sm"></i> Wie funktioniert das Gründach?
+        </a>
+      </div>
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-2xl w-full border-t border-white/20 pt-10">
+        <div>
+          <h3 class="font-serif font-bold text-3xl" style="color:#6ee7b7;">38</h3>
+          <p class="text-xs text-white/60 uppercase tracking-wide font-medium mt-1">Pflanzenarten</p>
+        </div>
+        <div>
+          <h3 class="font-serif font-bold text-3xl" style="color:#6ee7b7;">2</h3>
+          <p class="text-xs text-white/60 uppercase tracking-wide font-medium mt-1">Klimazonen</p>
+        </div>
+        <div>
+          <h3 class="font-serif font-bold text-3xl" style="color:#6ee7b7;">-40°C</h3>
+          <p class="text-xs text-white/60 uppercase tracking-wide font-medium mt-1">Frostbeständigkeit</p>
+        </div>
+        <div>
+          <h3 class="font-serif font-bold text-3xl" style="color:#6ee7b7;">90%</h3>
+          <p class="text-xs text-white/60 uppercase tracking-wide font-medium mt-1">Wasserrückhalt</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3D LAYERS SECTION — full width, thin -->
+  <section id="slojevi" class="w-full bg-sand-50 dark:bg-forest-900 border-b border-forest-100 dark:border-forest-800 py-8 no-print">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="text-center mb-4">
+        <span class="text-xs font-bold uppercase tracking-widest text-forest-500 dark:text-mint">Interaktive 3D-Ansicht</span>
+        <h2 class="font-serif font-bold text-2xl text-forest-800 dark:text-white mt-1">Aufbau des Gründachs</h2>
+      </div>
+      <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+        <!-- 3D Stack + Slider -->
+        <div class="flex-shrink-0 flex flex-col items-center">
+          <div class="isometric-container py-2 select-none">
+            <div id="hero-iso-stack" class="isometric-stack" style="width:200px;height:200px;">
+              <div class="isometric-layer texture-veg active-3d" data-layer="1" onclick="focus3DLayer(1)" title="1. Vegetationsschicht">
+                <div class="slab-side-x"></div><div class="slab-side-y"></div>
+                <div class="absolute inset-0 flex items-center justify-center rotate-45 transform-style-preserve-3d text-white font-extrabold text-2xl drop-shadow-md">🌿</div>
+              </div>
+              <div class="isometric-layer texture-sub" data-layer="2" onclick="focus3DLayer(2)" title="2. Substrat">
+                <div class="slab-side-x"></div><div class="slab-side-y"></div>
+                <div class="absolute inset-0 flex items-center justify-center rotate-45 transform-style-preserve-3d text-white font-extrabold text-2xl drop-shadow-md">🪨</div>
+              </div>
+              <div class="isometric-layer texture-fleece" data-layer="3" onclick="focus3DLayer(3)" title="3. Filtervlies">
+                <div class="slab-side-x"></div><div class="slab-side-y"></div>
+                <div class="absolute inset-0 flex items-center justify-center rotate-45 transform-style-preserve-3d text-forest-700 font-extrabold text-2xl drop-shadow-md">🕸️</div>
+              </div>
+              <div class="isometric-layer texture-drain" data-layer="4" onclick="focus3DLayer(4)" title="4. Drainageschicht">
+                <div class="slab-side-x"></div><div class="slab-side-y"></div>
+                <div class="absolute inset-0 flex items-center justify-center rotate-45 transform-style-preserve-3d text-white font-extrabold text-2xl drop-shadow-md">💧</div>
+              </div>
+              <div class="isometric-layer texture-water" data-layer="5" onclick="focus3DLayer(5)" title="5. Dachabdichtung">
+                <div class="slab-side-x"></div><div class="slab-side-y"></div>
+                <div class="absolute inset-0 flex items-center justify-center rotate-45 transform-style-preserve-3d text-white font-extrabold text-2xl drop-shadow-md">🛡️</div>
+              </div>
+              <div class="isometric-layer texture-deck" data-layer="6" onclick="focus3DLayer(6)" title="6. Dachkonstruktion">
+                <div class="slab-side-x"></div><div class="slab-side-y"></div>
+                <div class="absolute inset-0 flex items-center justify-center rotate-45 transform-style-preserve-3d text-white font-extrabold text-2xl drop-shadow-md">🏢</div>
+              </div>
+            </div>
+          </div>
+          <!-- Explode Slider -->
+          <div class="w-52 space-y-1 mt-2">
+            <div class="flex justify-between items-center text-xs font-semibold text-forest-500 dark:text-forest-400">
+              <span>Kompakt</span>
+              <span class="text-forest-800 dark:text-mint font-bold" id="explode-percent">15%</span>
+              <span>Explodiert</span>
+            </div>
+            <input type="range" id="explode-slider" min="0" max="1" step="0.01" value="0.15" oninput="updateExplode(this.value)" class="w-full">
+          </div>
+        </div>
+
+        <!-- Layer Details — active card -->
+        <div class="flex-1 w-full">
+          <div class="p-5 rounded-2xl bg-white dark:bg-forest-800/50 border border-forest-100 dark:border-forest-800 shadow-sm transition-all duration-300" id="3d-details-card">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="h-8 w-8 rounded-full bg-forest-600 text-white dark:bg-mint dark:text-forest-900 flex items-center justify-center font-bold text-sm" id="layer-detail-num">1</span>
+              <div>
+                <h4 class="font-bold text-lg text-forest-850 dark:text-white leading-tight" id="layer-detail-name">Vegetationsschicht</h4>
+                <p class="text-xs text-forest-500 dark:text-mint font-medium uppercase tracking-wider" id="layer-detail-sub">Schichten des Gründachs</p>
+              </div>
+            </div>
+            <p class="text-forest-600 dark:text-forest-300 text-sm leading-relaxed mb-3" id="layer-detail-desc">
+              Die oberste Schicht des Gründachs, bestehend aus hochresistenten Sedumen, Gräsern oder krautigen Stauden, angepasst an extreme Bedingungen und minimale Pflege.
+            </p>
+            <div class="grid grid-cols-2 gap-4 text-xs">
+              <div class="bg-forest-50 dark:bg-forest-800 rounded-xl p-3">
+                <span class="block text-forest-400 uppercase tracking-wider font-medium mb-1">Schichtdicke</span>
+                <span class="text-forest-800 dark:text-white font-bold" id="layer-detail-thick">1 - 5 cm</span>
+              </div>
+              <div class="bg-forest-50 dark:bg-forest-800 rounded-xl p-3">
+                <span class="block text-forest-400 uppercase tracking-wider font-medium mb-1">Hauptfunktion</span>
+                <span class="text-forest-800 dark:text-white font-bold" id="layer-detail-func">Biodiversität & Kühlung</span>
+              </div>
+            </div>
+          </div>
+          <!-- 6 Layer quick-nav pills -->
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-3">
+            <button onclick="focus3DLayer(1)" class="layer-pill text-xs font-semibold py-2 px-1 rounded-xl border border-forest-100 dark:border-forest-700 bg-white dark:bg-forest-800 hover:border-forest-400 transition-all text-center text-forest-700 dark:text-forest-300">🌿 Vegetation</button>
+            <button onclick="focus3DLayer(2)" class="layer-pill text-xs font-semibold py-2 px-1 rounded-xl border border-forest-100 dark:border-forest-700 bg-white dark:bg-forest-800 hover:border-forest-400 transition-all text-center text-forest-700 dark:text-forest-300">🪨 Substrat</button>
+            <button onclick="focus3DLayer(3)" class="layer-pill text-xs font-semibold py-2 px-1 rounded-xl border border-forest-100 dark:border-forest-700 bg-white dark:bg-forest-800 hover:border-forest-400 transition-all text-center text-forest-700 dark:text-forest-300">🕸️ Vlies</button>
+            <button onclick="focus3DLayer(4)" class="layer-pill text-xs font-semibold py-2 px-1 rounded-xl border border-forest-100 dark:border-forest-700 bg-white dark:bg-forest-800 hover:border-forest-400 transition-all text-center text-forest-700 dark:text-forest-300">💧 Drainage</button>
+            <button onclick="focus3DLayer(5)" class="layer-pill text-xs font-semibold py-2 px-1 rounded-xl border border-forest-100 dark:border-forest-700 bg-white dark:bg-forest-800 hover:border-forest-400 transition-all text-center text-forest-700 dark:text-forest-300">🛡️ Abdichtung</button>
+            <button onclick="focus3DLayer(6)" class="layer-pill text-xs font-semibold py-2 px-1 rounded-xl border border-forest-100 dark:border-forest-700 bg-white dark:bg-forest-800 hover:border-forest-400 transition-all text-center text-forest-700 dark:text-forest-300">🏢 Konstruktion</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULATOR & SIMULATOR SECTION -->
+  <main id="kalkulator" class="max-w-7xl mx-auto px-6 md:px-12 py-12 scroll-mt-24">
+    <div class="text-center space-y-4 mb-12 no-print">
+      <span class="text-xs font-bold uppercase tracking-widest text-forest-500 dark:text-mint">Planung starten</span>
+      <h2 class="font-serif font-extrabold text-3xl sm:text-4xl text-forest-800 dark:text-white">Interaktiver Gründach-Simulator</h2>
+      <p class="text-forest-600 dark:text-forest-300 max-w-xl mx-auto text-sm sm:text-base">
+        Passen Sie die Parameter in Echtzeit an und verfolgen Sie die ökologischen, thermischen und finanziellen Aspekte Ihres Daches.
+      </p>
+    </div>
+
+    <!-- Main Simulator Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- COLUMN 1: Inputs & Configurator (5 columns) -->
+      <section class="lg:col-span-5 space-y-6 no-print">
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-premium border border-white/40 dark:border-white/10 space-y-6">
+          <div class="flex items-center gap-3 border-b border-forest-100 dark:border-forest-800 pb-4">
+            <span class="h-8 w-8 rounded-lg bg-forest-100 dark:bg-forest-800 flex items-center justify-center text-forest-600 dark:text-mint"><i class="fa-solid fa-sliders text-sm"></i></span>
+            <div>
+              <h3 class="font-bold text-lg text-forest-800 dark:text-white">Dach-Konfigurator</h3>
+              <p class="text-xs text-forest-500 dark:text-forest-400">Grundparameter der Konstruktion festlegen</p>
+            </div>
+          </div>
+
+          <!-- Parameter 1: Region -->
+          <div class="space-y-3">
+            <label class="block text-xs font-bold uppercase tracking-wider text-forest-600 dark:text-forest-400">1. Region / Klimazone auswählen</label>
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Mediterranean Card -->
+              <button onclick="setRegion('mediteranska')" id="card-reg-med" class="group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200">
+                <div class="text-3xl filter saturate-75 mb-2 group-hover:scale-110 transition-transform">🌊</div>
+                <h4 class="font-bold text-sm text-forest-800 dark:text-white">Mediterran</h4>
+                <p class="text-2xs text-forest-400 mt-1 leading-normal">Küstenregionen, Mittelmeerraum, Südtirol.</p>
+                <div class="absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center" id="chk-reg-med">
+                  <i class="fa-solid fa-check text-2xs text-white"></i>
+                </div>
+              </button>
+              
+              <!-- Continental Card -->
+              <button onclick="setRegion('kontinentalna')" id="card-reg-kon" class="group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200">
+                <div class="text-3xl filter saturate-75 mb-2 group-hover:scale-110 transition-transform">🌾</div>
+                <h4 class="font-bold text-sm text-forest-800 dark:text-white">Kontinental</h4>
+                <p class="text-2xs text-forest-400 mt-1 leading-normal">Wien, Bayern, Alpenvorland, Mitteleuropa.</p>
+                <div class="absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center" id="chk-reg-kon">
+                  <i class="fa-solid fa-check text-2xs text-white"></i>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Parameter 2: Area -->
+          <div class="space-y-3">
+            <div class="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-forest-600 dark:text-forest-400">
+              <label>2. Fläche des Gründachs</label>
+              <div class="flex items-center gap-1.5">
+                <input type="number" id="input-area" min="10" max="500" value="80" oninput="updateArea(this.value)" class="w-16 p-1 bg-white dark:bg-forest-800 border border-forest-200 dark:border-forest-700 rounded-md text-center text-sm font-bold text-forest-800 dark:text-mint outline-none focus:border-mint">
+                <span>m²</span>
+              </div>
+            </div>
+            
+            <input type="range" id="slider-area" min="10" max="500" step="5" value="80" oninput="updateArea(this.value)" class="w-full">
+            <div class="flex justify-between text-2xs text-forest-400">
+              <span>Minimum: 10 m²</span>
+              <span>Maximum: 500 m²</span>
+            </div>
+            <p class="text-2xs text-forest-400"><i class="fa-solid fa-info-circle mr-1"></i> Die empfohlene Mindestfläche für Dachbegrünungen beträgt 10 m² für statische Stabilität.</p>
+          </div>
+
+          <!-- Parameter 3: Roof Type -->
+          <div class="space-y-3">
+            <label class="block text-xs font-bold uppercase tracking-wider text-forest-600 dark:text-forest-400">3. Ausführungstyp des Gründachs</label>
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Extensive Card -->
+              <button onclick="setRoofType('ekstenzivni')" id="card-roof-ext" class="group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200">
+                <div class="text-3xl filter saturate-75 mb-2 group-hover:scale-110 transition-transform">🌿</div>
+                <h4 class="font-bold text-sm text-forest-800 dark:text-white">Extensivdach</h4>
+                <div class="flex gap-1.5 my-1.5">
+                  <span class="px-1.5 py-0.5 rounded bg-forest-100 dark:bg-forest-700 text-3xs font-bold text-forest-750 dark:text-white">6-10 cm</span>
+                  <span class="px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900/40 text-3xs font-bold text-green-700 dark:text-green-300">~110 kg/m²</span>
+                </div>
+                <p class="text-2xs text-forest-400 leading-normal">Geringe Substratdicke, niedrige Vegetation (sedum), sehr pflegeleicht.</p>
+                <div class="absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center" id="chk-roof-ext">
+                  <i class="fa-solid fa-check text-2xs text-white"></i>
+                </div>
+              </button>
+
+              <!-- Intensive Card -->
+              <button onclick="setRoofType('intenzivni')" id="card-roof-int" class="group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200">
+                <div class="text-3xl filter saturate-75 mb-2 group-hover:scale-110 transition-transform">🌳</div>
+                <div class="flex gap-1.5 my-1.5">
+                  <span class="px-1.5 py-0.5 rounded bg-forest-100 dark:bg-forest-700 text-3xs font-bold text-forest-750 dark:text-white">20-30 cm</span>
+                  <span class="px-1.5 py-0.5 rounded bg-orange-100 dark:bg-orange-950/40 text-3xs font-bold text-orange-700 dark:text-orange-300">~310 kg/m²</span>
+                </div>
+                <h4 class="font-bold text-sm text-forest-800 dark:text-white">Intensivdach</h4>
+                <p class="text-2xs text-forest-400 leading-normal">Tiefes Substrat, Sträucher, Stauden und Blumen. Funktioniert als Dachgarten.</p>
+                <div class="absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center" id="chk-roof-int">
+                  <i class="fa-solid fa-check text-2xs text-white"></i>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 2: Calculations & Real-time Live Metrics (7 columns) -->
+      <section class="lg:col-span-7 space-y-6">
+        
+        <!-- Live Calculations Dashboard -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-premium border border-white/40 dark:border-white/10 space-y-6">
+          <div class="flex items-center justify-between border-b border-forest-100 dark:border-forest-800 pb-4">
+            <div class="flex items-center gap-3">
+              <span class="h-8 w-8 rounded-lg bg-forest-100 dark:bg-forest-800 flex items-center justify-center text-forest-600 dark:text-mint"><i class="fa-solid fa-square-poll-horizontal text-sm"></i></span>
+              <div>
+                <h3 class="font-bold text-lg text-forest-800 dark:text-white">Simulationsergebnisse</h3>
+                <p class="text-xs text-forest-500 dark:text-forest-400">Berechnet auf Basis der gewählten Parameter</p>
+              </div>
+            </div>
+            
+            <button onclick="printSummary()" class="no-print bg-forest-50 hover:bg-forest-100 dark:bg-forest-800 dark:hover:bg-forest-700 border border-forest-100 dark:border-forest-700 text-forest-700 dark:text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-2 transition-colors">
+              <i class="fa-solid fa-file-pdf"></i> Spezifikation exportieren
+            </button>
+          </div>
+
+          <!-- Main Investment Metrics Banner -->
+          <div class="p-6 rounded-2xl bg-gradient-to-br from-forest-700 to-forest-800 dark:from-forest-800/80 dark:to-forest-900/80 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 shadow-md relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_right,_var(--tw-gradient-stops))] from-mint-500/10 via-transparent to-transparent pointer-events-none"></div>
+            
+            <div class="space-y-1.5 relative">
+              <span class="text-xs uppercase font-bold text-mint tracking-wider">Gesamte geschätzte Investition</span>
+              <div class="flex items-baseline gap-1">
+                <span class="font-serif font-black text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight" id="lbl-total-price">0.00</span>
+                <span class="text-lg font-bold text-mint">€</span>
+              </div>
+              <p class="text-3xs text-forest-300 leading-normal"><i class="fa-solid fa-circle-exclamation mr-1"></i> Richtwert-Berechnung (Material, Substrat und Pflanzen). Ohne MwSt.</p>
+            </div>
+
+            <div class="h-px w-full sm:h-12 sm:w-px bg-white/10"></div>
+
+            <div class="space-y-1">
+              <span class="text-2xs uppercase font-bold text-forest-300">Investition pro m²:</span>
+              <div class="flex items-baseline gap-0.5">
+                <span class="text-xl sm:text-2xl font-extrabold text-white" id="lbl-price-m2">0.00</span>
+                <span class="text-xs font-bold text-mint">€ / m²</span>
+              </div>
+              <span class="inline-flex items-center gap-1 bg-mint/10 dark:bg-mint/20 border border-mint/20 text-mint font-bold px-2.5 py-0.5 rounded-full text-3xs uppercase tracking-wider mt-1">
+                <i class="fa-solid fa-circle-dollar-to-slot"></i> ROI: <span id="lbl-roi-years" class="ml-0.5">0.0</span> J.
+              </span>
+            </div>
+          </div>
+
+          <!-- Live SVG Charts & Info Area -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Cost Breakdown SVG Donut -->
+            <div class="border border-forest-100 dark:border-forest-800 p-4 rounded-2xl bg-white dark:bg-forest-800/10 flex flex-col items-center">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-forest-500 dark:text-forest-400 mb-3 self-start"><i class="fa-solid fa-chart-pie mr-1"></i> Kostenverteilung</h4>
+              
+              <div class="relative w-40 h-40">
+                <!-- SVG Donut Chart -->
+                <svg width="100%" height="100%" viewBox="0 0 42 42" class="transform -rotate-90">
+                  <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="rgba(200,200,200,0.1)" stroke-width="4.2"></circle>
+                  
+                  <!-- Substrate Segment -->
+                  <circle id="donut-sub" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#7a5c44" stroke-width="4.2" stroke-dasharray="25 75" stroke-dashoffset="0" class="transition-all duration-500"></circle>
+                  <!-- Drainage Segment -->
+                  <circle id="donut-drain" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#c06c50" stroke-width="4.2" stroke-dasharray="25 75" stroke-dashoffset="-25" class="transition-all duration-500"></circle>
+                  <!-- Plants Segment -->
+                  <circle id="donut-plants" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#3cd070" stroke-width="4.2" stroke-dasharray="25 75" stroke-dashoffset="-50" class="transition-all duration-500"></circle>
+                  <!-- Waterproofing Segment -->
+                  <circle id="donut-water" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#1b2a4a" stroke-width="4.2" stroke-dasharray="25 75" stroke-dashoffset="-75" class="transition-all duration-500"></circle>
+                </svg>
+                
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <span class="text-3xs uppercase font-semibold text-forest-450">Investition</span>
+                  <span class="text-xs font-bold text-forest-800 dark:text-white" id="donut-center-total">0 €</span>
+                </div>
+              </div>
+              
+              <!-- Legend Grid -->
+              <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 mt-4 w-full text-2xs">
+                <div class="flex items-center gap-1.5">
+                  <span class="h-2 w-2 rounded-full bg-[#7a5c44]"></span>
+                  <span class="text-forest-600 dark:text-forest-400">Substrat: <span class="font-bold text-forest-800 dark:text-white" id="legend-sub">0%</span></span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="h-2 w-2 rounded-full bg-[#c06c50]"></span>
+                  <span class="text-forest-600 dark:text-forest-400">Drainage: <span class="font-bold text-forest-800 dark:text-white" id="legend-drain">0%</span></span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="h-2 w-2 rounded-full bg-[#3cd070]"></span>
+                  <span class="text-forest-600 dark:text-forest-400">Pflanzen: <span class="font-bold text-forest-800 dark:text-white" id="legend-plants">0%</span></span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="h-2 w-2 rounded-full bg-[#1b2a4a]"></span>
+                  <span class="text-forest-600 dark:text-forest-400">Abdichtung: <span class="font-bold text-forest-800 dark:text-white" id="legend-water">0%</span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Summer Temp Mitigation Chart -->
+            <div class="border border-forest-100 dark:border-forest-800 p-4 rounded-2xl bg-white dark:bg-forest-800/10 flex flex-col">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-forest-500 dark:text-forest-400 mb-3"><i class="fa-solid fa-temperature-three-quarters mr-1"></i> Thermische Barriere im Sommer</h4>
+              
+              <!-- Animated Temp Bars -->
+              <div class="flex-1 flex flex-col justify-around gap-2 py-2">
+                <!-- Bar 1: Classic Roof -->
+                <div class="space-y-1">
+                  <div class="flex justify-between text-3xs font-semibold">
+                    <span class="text-forest-600 dark:text-forest-300">Klassisches dunkles Dach</span>
+                    <span class="text-red-500 font-extrabold" id="temp-lbl-classic">75 °C</span>
+                  </div>
+                  <div class="w-full bg-forest-50 dark:bg-forest-800/40 h-3 rounded-full overflow-hidden">
+                    <div id="temp-bar-classic" class="h-full bg-gradient-to-r from-orange-500 to-red-500 rounded-full transition-all duration-700" style="width: 75%"></div>
+                  </div>
+                </div>
+
+                <!-- Bar 2: Ambient Air -->
+                <div class="space-y-1">
+                  <div class="flex justify-between text-3xs font-semibold">
+                    <span class="text-forest-600 dark:text-forest-300">Außenluft</span>
+                    <span class="text-orange-500 font-extrabold" id="temp-lbl-air">35 °C</span>
+                  </div>
+                  <div class="w-full bg-forest-50 dark:bg-forest-800/40 h-3 rounded-full overflow-hidden">
+                    <div id="temp-bar-air" class="h-full bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full transition-all duration-700" style="width: 35%"></div>
+                  </div>
+                </div>
+
+                <!-- Bar 3: Green Roof Surface -->
+                <div class="space-y-1">
+                  <div class="flex justify-between text-3xs font-semibold">
+                    <span class="text-forest-600 dark:text-forest-300">Gründach (Oberfläche)</span>
+                    <span class="text-mint font-extrabold" id="temp-lbl-green">28 °C</span>
+                  </div>
+                  <div class="w-full bg-forest-50 dark:bg-forest-800/40 h-3 rounded-full overflow-hidden">
+                    <div id="temp-bar-green" class="h-full bg-gradient-to-r from-forest-400 to-mint rounded-full transition-all duration-700" style="width: 28%"></div>
+                  </div>
+                </div>
+
+                <!-- Bar 4: Room Underneath -->
+                <div class="space-y-1">
+                  <div class="flex justify-between text-3xs font-semibold">
+                    <span class="text-forest-600 dark:text-forest-300">Raum darunter</span>
+                    <span class="text-blue-500 font-extrabold" id="temp-lbl-room">23 °C</span>
+                  </div>
+                  <div class="w-full bg-forest-50 dark:bg-forest-800/40 h-3 rounded-full overflow-hidden">
+                    <div id="temp-bar-room" class="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full transition-all duration-700" style="width: 23%"></div>
+                  </div>
+                </div>
+              </div>
+              <p class="text-4xs text-forest-400 mt-2 text-center"><i class="fa-solid fa-circle-info"></i> Verringerung der Wärmeinsel und Einsparung von bis zu 25% bei Klimakosten im Sommer.</p>
+            </div>
+          </div>
+
+          <!-- Environmental Impact Badges -->
+          <div class="grid grid-cols-3 gap-4 border-t border-forest-100 dark:border-forest-800 pt-6">
+            <!-- CO2 -->
+            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-3">
+              <span class="h-10 w-10 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-base"><i class="fa-solid fa-cloud-sun"></i></span>
+              <div class="space-y-0.5">
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none">CO₂-Bindung:</span>
+                <span class="text-sm font-bold text-forest-800 dark:text-white" id="lbl-val-co2">0 kg/J.</span>
+              </div>
+            </div>
+            <!-- Energy -->
+            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-3">
+              <span class="h-10 w-10 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-base"><i class="fa-solid fa-bolt"></i></span>
+              <div class="space-y-0.5">
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none">Stromersparnis:</span>
+                <span class="text-sm font-bold text-forest-800 dark:text-white" id="lbl-val-energy">0 €/J.</span>
+              </div>
+            </div>
+            <!-- Water -->
+            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-3">
+              <span class="h-10 w-10 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-base"><i class="fa-solid fa-droplet"></i></span>
+              <div class="space-y-0.5">
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none">Wasserrückhalt:</span>
+                <span class="text-sm font-bold text-forest-800 dark:text-white" id="lbl-val-water">0 L/J.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Static Load Speedometer Alert -->
+          <div class="p-4 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-750 dark:text-yellow-450 flex items-start gap-3">
+            <span class="text-lg text-yellow-500 animate-pulse mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i></span>
+            <div class="text-xs space-y-1">
+              <div class="font-bold flex items-center gap-2">
+                Erwartete statische Dachlast: <span id="lbl-static-weight" class="font-black text-sm text-forest-800 dark:text-white">110 kg/m²</span>
+              </div>
+              <p class="leading-relaxed">
+                Die Last ist im wassergesättigten Zustand (nasses Dach) berechnet. <strong>Eine statische Berechnung durch einen zugelassenen Bauingenieur ist gesetzlich vorgeschrieben</strong>, bevor ein Gründach eingebaut wird.
+              </p>
+            </div>
+          </div>
+
+          <!-- Detail Material Invoice Table -->
+          <div class="space-y-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-forest-600 dark:text-forest-400">Kostenspezifikation</h4>
+            <div class="rounded-2xl border border-forest-100 dark:border-forest-800 overflow-hidden text-xs">
+              <div class="grid grid-cols-12 bg-forest-50 dark:bg-forest-800/40 p-3 font-bold text-forest-750 dark:text-white border-b border-forest-100 dark:border-forest-800">
+                <div class="col-span-6">Schichten / Positionen</div>
+                <div class="col-span-3 text-right">Menge</div>
+                <div class="col-span-3 text-right">Preis</div>
+              </div>
+              <div class="divide-y divide-forest-100 dark:divide-forest-800/60">
+                <!-- Substrate -->
+                <div class="grid grid-cols-12 p-3 items-center">
+                  <div class="col-span-6">
+                    <span class="font-bold block">1. Substrat für Gründächer</span>
+                    <span class="text-3xs text-forest-400">Mischung aus Bims, Lava, Blähton und organischen Stoffen</span>
+                  </div>
+                  <div class="col-span-3 text-right font-medium" id="cell-sub-qty">0.0 m³</div>
+                  <div class="col-span-3 text-right font-bold text-forest-750 dark:text-white" id="cell-sub-price">0.00 €</div>
+                </div>
+                <!-- Drainage -->
+                <div class="grid grid-cols-12 p-3 items-center">
+                  <div class="col-span-6">
+                    <span class="font-bold block">2. Drainage-Speicherschicht + Filtervlies</span>
+                    <span class="text-3xs text-forest-400">Noppenfolie mit Wasserspeichern und Filtervlies</span>
+                  </div>
+                  <div class="col-span-3 text-right font-medium" id="cell-drain-qty">0.0 m²</div>
+                  <div class="col-span-3 text-right font-bold text-forest-750 dark:text-white" id="cell-drain-price">0.00 €</div>
+                </div>
+                <!-- Waterproofing -->
+                <div class="grid grid-cols-12 p-3 items-center">
+                  <div class="col-span-6">
+                    <span class="font-bold block">3. Wurzelfeste Dachabdichtung</span>
+                    <span class="text-3xs text-forest-400">TPO/FPO-Membran wurzelfest und wasserresistent</span>
+                  </div>
+                  <div class="col-span-3 text-right font-medium" id="cell-water-qty">0.0 m²</div>
+                  <div class="col-span-3 text-right font-bold text-forest-750 dark:text-white" id="cell-water-price">0.00 €</div>
+                </div>
+                <!-- Plants -->
+                <div class="grid grid-cols-12 p-3 items-center">
+                  <div class="col-span-6">
+                    <span class="font-bold block">4. Pflanzsetzlinge und Saatgut</span>
+                    <span class="text-3xs text-forest-400">Pflanzenmix (Sedum, Stauden, Gräser) je nach Auswahl</span>
+                  </div>
+                  <div class="col-span-3 text-right font-medium" id="cell-plants-qty">0 Stk.</div>
+                  <div class="col-span-3 text-right font-bold text-forest-750 dark:text-white" id="cell-plants-price">0.00 €</div>
+                </div>
+                <!-- Installation (Optional checkbox toggle) -->
+                <div class="grid grid-cols-12 p-3 items-center bg-mint-50/10 dark:bg-mint/5 no-print">
+                  <div class="col-span-6 flex items-center gap-2">
+                    <input type="checkbox" id="chk-install-toggle" onchange="toggleInstallation(this.checked)" class="rounded text-forest-600 focus:ring-forest-500 h-4 w-4 bg-white border-forest-200">
+                    <div>
+                      <span class="font-bold block">Montage und Einbau einschließen (Schätzung)</span>
+                      <span class="text-3xs text-forest-400">Lieferung, Schichtverlegung und Bepflanzung</span>
+                    </div>
+                  </div>
+                  <div class="col-span-3 text-right font-medium">Durchschnittstarif</div>
+                  <div class="col-span-3 text-right font-bold text-forest-750 dark:text-white" id="cell-install-price">0.00 €</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Funding and subsidies alert -->
+            <div class="p-4 rounded-2xl bg-mint-50/20 dark:bg-mint/10 border border-mint/20 text-xs flex justify-between items-center">
+              <div class="space-y-0.5">
+                <span class="font-bold text-forest-700 dark:text-mint flex items-center gap-1.5"><i class="fa-solid fa-euro-sign text-sm"></i> EU-Förderung (KFW / Klimafonds)</span>
+                <p class="text-forest-500 dark:text-forest-450">Gründächer werden durch ökologische Förderprogramme mit bis zu <strong>40% des Wertes</strong> kofinanziert.</p>
+              </div>
+              <span class="hidden sm:inline-block px-3 py-1 bg-mint/10 border border-mint/25 text-mint font-bold uppercase tracking-wider rounded-lg text-2xs">Förderung bis 40%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- VEGETATION SECTION: CATALOG & SELECTOR -->
+  <section id="katalog" class="bg-white dark:bg-forest-800/10 py-16 px-6 md:px-12 border-t border-b border-forest-100 dark:border-forest-800/50">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Section Title -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+        <div class="space-y-3">
+          <span class="text-xs font-bold uppercase tracking-widest text-forest-500 dark:text-mint">Gartenbau & Pflanzenauswahl</span>
+          <h2 class="font-serif font-extrabold text-3xl sm:text-4xl text-forest-800 dark:text-white">Pflanzendatenbank & -auswahl</h2>
+          <p class="text-forest-600 dark:text-forest-300 max-w-xl text-sm sm:text-base">
+            Wählen Sie zwischen dem empfohlenen professionellen Mix und der manuellen Erstellung einer eigenen Kombination mit intelligenter Kompatibilitätsprüfung.
+          </p>
+        </div>
+        
+        <!-- Tab Switcher -->
+        <div class="no-print inline-flex p-1 bg-forest-100 dark:bg-forest-800 rounded-2xl select-none">
+          <button id="btn-tab-auto" onclick="switchHortiTab('auto')" class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-forest-800 dark:text-white bg-white dark:bg-forest-700 shadow-md">
+            <i class="fa-solid fa-magic mr-1.5 text-xs text-mint"></i> Empfohlener Mix
+          </button>
+          <button id="btn-tab-custom" onclick="switchHortiTab('custom')" class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-forest-500 dark:text-forest-300 hover:text-forest-800">
+            <i class="fa-solid fa-sliders mr-1.5 text-xs"></i> Eigener Mix (Custom)
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 1: RECOMMENDED MIX (AUTO) -->
+      <div id="horti-tab-auto" class="space-y-8">
+        <div class="p-6 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 text-xs sm:text-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div class="space-y-1">
+            <h3 id="lbl-auto-title" class="font-bold text-forest-800 dark:text-white flex items-center gap-2 text-sm sm:text-base">
+              <i class="fa-solid fa-award text-mint"></i> Professionelle Dachformel
+            </h3>
+            <p id="lbl-auto-desc" class="text-forest-600 dark:text-forest-350">
+              Unser Algorithmus hat einen Mix der Top-3-Pflanzen erstellt, angepasst für <span id="lbl-auto-roof" class="font-bold text-forest-800 dark:text-mint">Extensivdach</span> in der Region <span id="lbl-auto-reg" class="font-bold text-forest-800 dark:text-mint">Mediterran</span>.
+            </p>
+          </div>
+          <div class="flex gap-3 font-semibold text-2xs uppercase text-forest-500">
+            <span class="px-2.5 py-1 rounded bg-forest-100 dark:bg-forest-800 text-forest-750 dark:text-white font-bold" id="lbl-auto-mix-status">50% / 30% / 20% Verteilung</span>
+          </div>
+        </div>
+
+        <!-- Plant Cards Grid (Top 3 Chosen dynamically) -->
+        <div id="grid-recommended-plants" class="grid grid-cols-1 md:grid-cols-3 gap-6 print-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- TAB 2: CUSTOM MIX (MANUAL SELECTION) -->
+      <div id="horti-tab-custom" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Selection Sidebar Dashboard -->
+        <div class="lg:col-span-4 glass-panel p-6 rounded-3xl border border-white/40 dark:border-white/10 space-y-6 sticky top-24 no-print shadow-premium">
+          <div class="flex items-center gap-3 border-b border-forest-100 dark:border-forest-800 pb-4">
+            <span class="h-8 w-8 rounded-lg bg-forest-100 dark:bg-forest-800 flex items-center justify-center text-forest-600 dark:text-mint"><i class="fa-solid fa-shopping-basket text-sm"></i></span>
+            <div>
+              <h3 class="font-bold text-base text-forest-800 dark:text-white">Ihre Kombination</h3>
+              <p class="text-3xs text-forest-400 uppercase tracking-wider" id="lbl-custom-qty-count">Ausgewählt: 0 Pflanzen (Min. 2 - Max. 6)</p>
+            </div>
+          </div>
+
+          <!-- Dynamic Mix Percentages breakdown -->
+          <div class="space-y-3" id="custom-mix-breakdown">
+            <!-- Populated dynamically -->
+            <div class="text-center py-6 text-forest-450 text-xs">
+              <i class="fa-solid fa-seedling text-lg animate-bounce text-mint mb-2 block"></i>
+              Wählen Sie mindestens 2 kompatible Pflanzen aus dem Katalog rechts, um Ihren eigenen Mix zu erstellen.
+            </div>
+          </div>
+
+          <!-- Live warning section -->
+          <div id="custom-mix-warnings" class="space-y-2 hidden">
+            <!-- Warnings go here -->
+          </div>
+
+          <!-- Custom Mix Total & Apply Button -->
+          <div class="space-y-4 pt-4 border-t border-forest-100 dark:border-forest-800">
+            <div class="flex justify-between items-baseline">
+              <span class="text-xs font-bold uppercase tracking-wider text-forest-500">Preis Pflanzsetzlinge:</span>
+              <div class="flex items-baseline gap-0.5">
+                <span class="text-xl font-extrabold text-forest-800 dark:text-white" id="lbl-custom-plants-total">0.00</span>
+                <span class="text-xs font-bold text-mint">€</span>
+              </div>
+            </div>
+            
+            <button id="btn-apply-custom-mix" disabled onclick="applyCustomMix()" class="w-full bg-forest-600 dark:bg-mint text-white dark:text-forest-900 font-bold py-3 rounded-xl shadow-md hover:-translate-y-0.5 transition-all text-xs disabled:opacity-40 disabled:pointer-events-none uppercase tracking-widest flex items-center justify-center gap-2">
+              <i class="fa-solid fa-square-check"></i> Berechnung generieren
+            </button>
+          </div>
+        </div>
+
+        <!-- Catalogue Plant Selection Grid (8 columns) -->
+        <div class="lg:col-span-8 space-y-6 no-print">
+          <!-- Horticulture Filters -->
+          <div class="flex flex-wrap items-center gap-2" id="catalog-filter-bar">
+            <!-- Filter Chips -->
+            <button onclick="filterCatalog('all')" id="btn-filt-all" class="px-4 py-2 text-xs font-bold rounded-xl bg-forest-600 dark:bg-mint text-white dark:text-forest-900">Alle Arten</button>
+            <button onclick="filterCatalog('sedum')" id="btn-filt-sedum" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white">Sedume</button>
+            <button onclick="filterCatalog('cuvarkuca')" id="btn-filt-cuvarkuca" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white">Hauswurze</button>
+            <button onclick="filterCatalog('bilje')" id="btn-filt-bilje" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white">Kräuter</button>
+            <button onclick="filterCatalog('cvijece')" id="btn-filt-cvijece" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white">Blumen</button>
+            <button onclick="filterCatalog('trava')" id="btn-filt-trava" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white">Gräser</button>
+            <button onclick="filterCatalog('grmlje')" id="btn-filt-grmlje" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white">Sträucher</button>
+          </div>
+
+          <!-- Catalog List Grid -->
+          <div id="grid-custom-catalogue" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONSTRUCTION WALKTHROUGH SECTION -->
+  <section id="tutorijal" class="max-w-7xl mx-auto px-6 md:px-12 py-16 no-print">
+    <div class="text-center space-y-4 mb-12">
+      <span class="text-xs font-bold uppercase tracking-widest text-forest-500 dark:text-mint">Fachliche technische Lösungen</span>
+      <h2 class="font-serif font-extrabold text-3xl sm:text-4xl text-forest-800 dark:text-white">Wie funktioniert der mehrschichtige Aufbau?</h2>
+      <p class="text-forest-600 dark:text-forest-300 max-w-xl mx-auto text-sm sm:text-base">
+        Ein hochwertiges Gründach besteht aus sorgfältig verlegten sechs Schichten.
+      </p>
+    </div>
+
+    <!-- Walkthrough interactive cards stack -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Item 1: Static and Drainage -->
+      <div class="p-6 rounded-3xl bg-white dark:bg-forest-800/20 border border-forest-100 dark:border-forest-800 hover:shadow-premium transition-all space-y-4 group">
+        <div class="h-12 w-12 rounded-2xl bg-mint-50 dark:bg-forest-850 flex items-center justify-center text-forest-600 dark:text-mint group-hover:scale-110 transition-transform">
+          <i class="fa-solid fa-weight-hanging text-lg"></i>
+        </div>
+        <h3 class="font-bold text-lg text-forest-800 dark:text-white">1. Statische Berechnung und Belastung</h3>
+        <p class="text-xs sm:text-sm text-forest-600 dark:text-forest-300 leading-relaxed">
+          Vor jeglichen Arbeiten muss die Tragfähigkeit des Daches geprüft werden. Extensivsysteme tragen Lasten von 80 bis 130 kg/m², während Intensivsysteme bis zu 400 kg/m² erfordern.
+        </p>
+        <span class="inline-block text-3xs font-bold text-mint uppercase tracking-wider">Statik hat Priorität #1</span>
+      </div>
+
+      <!-- Item 2: Irrigation and microclimate -->
+      <div class="p-6 rounded-3xl bg-white dark:bg-forest-800/20 border border-forest-100 dark:border-forest-800 hover:shadow-premium transition-all space-y-4 group">
+        <div class="h-12 w-12 rounded-2xl bg-mint-50 dark:bg-forest-850 flex items-center justify-center text-forest-600 dark:text-mint group-hover:scale-110 transition-transform">
+          <i class="fa-solid fa-tint text-lg"></i>
+        </div>
+        <h3 class="font-bold text-lg text-forest-800 dark:text-white">2. Wassermanagement und Bewässerung</h3>
+        <p class="text-xs sm:text-sm text-forest-600 dark:text-forest-300 leading-relaxed">
+          Die Noppendrainageschicht speichert einen Teil des Regenwassers, damit die Pflanzen während trockener Sommertage Feuchtigkeit haben. Im Mittelmeerraum wird für Intensivdächer ein Tropfbewässerungssystem empfohlen.
+        </p>
+        <span class="inline-block text-3xs font-bold text-mint uppercase tracking-wider">Drainage speichert Feuchtigkeit</span>
+      </div>
+
+      <!-- Item 3: Insulation & protection -->
+      <div class="p-6 rounded-3xl bg-white dark:bg-forest-800/20 border border-forest-100 dark:border-forest-800 hover:shadow-premium transition-all space-y-4 group">
+        <div class="h-12 w-12 rounded-2xl bg-mint-50 dark:bg-forest-850 flex items-center justify-center text-forest-600 dark:text-mint group-hover:scale-110 transition-transform">
+          <i class="fa-solid fa-shield text-lg"></i>
+        </div>
+        <h3 class="font-bold text-lg text-forest-800 dark:text-white">3. Schutz der Dachmembran vor Schäden</h3>
+        <p class="text-xs sm:text-sm text-forest-600 dark:text-forest-300 leading-relaxed">
+          Eine hochwertige wurzelfeste Abdichtung schützt die Innenräume vor Feuchtigkeit und verhindert, dass aggressives Wurzelwerk einiger Pflanzenarten durch die Grundschichten dringt und Risse in der Tragplatte verursacht.
+        </p>
+        <span class="inline-block text-3xs font-bold text-mint uppercase tracking-wider">Dreifacher Gebäudeschutz</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRINT-ONLY DETAILED PDF REPORT SUMMARY (Format for print layouts) -->
+  <section class="hidden print-layout mx-auto max-w-5xl py-8 px-12 space-y-8 text-black" id="print-layout-element">
+    <div class="flex justify-between items-center border-b-2 border-forest-600 pb-4">
+      <div>
+        <h1 class="font-serif font-black text-3xl">TECHNISCHE SPEZIFIKATION GRÜNDACH</h1>
+        <p class="text-sm font-semibold uppercase tracking-wider text-forest-600 mt-1">Gründach Planer — <span style="font-family:'Orbitron',sans-serif;font-weight:700;">2LMF <span style="color:#E67E22;">PRO</span></span> Planer</p>
+      </div>
+      <div class="text-right text-xs">
+        <p>Erstellungsdatum: <strong id="print-date">--.--.----</strong></p>
+        <p>Projekt-ID: <strong>GD-#<span id="print-project-id">------</span></strong></p>
+      </div>
+    </div>
+
+    <!-- Dimensions & parameters breakdown -->
+    <div class="grid grid-cols-3 gap-6 p-4 rounded-xl border border-gray-300 text-xs">
+      <div>
+        <span class="block text-gray-500 font-medium uppercase text-3xs">Gewählte Region:</span>
+        <strong class="text-sm" id="print-reg-name">Mediterran (Mittelmeerküste)</strong>
+      </div>
+      <div>
+        <span class="block text-gray-500 font-medium uppercase text-3xs">Gemessene Fläche:</span>
+        <strong class="text-sm"><span id="print-area-val">80</span> m²</strong>
+      </div>
+      <div>
+        <span class="block text-gray-500 font-medium uppercase text-3xs">Dachausführungstyp:</span>
+        <strong class="text-sm" id="print-roof-type-name">Extensivdach</strong>
+      </div>
+    </div>
+
+    <!-- Financial summary print card -->
+    <div class="space-y-3">
+      <h3 class="font-serif font-bold text-lg border-b border-gray-300 pb-1.5 text-forest-700">1. FINANZIELLE INVESTITIONSSCHÄTZUNG</h3>
+      <table class="w-full text-left text-xs border-collapse divide-y divide-gray-300">
+        <thead>
+          <tr class="font-bold text-gray-700">
+            <th class="py-2">Position / Materialschicht</th>
+            <th class="py-2 text-right">Menge</th>
+            <th class="py-2 text-right">Einzelpreis</th>
+            <th class="py-2 text-right">Gesamt geschätzt</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr>
+            <td class="py-2">Substrat für Gründächer (Tiefe je nach Typ)</td>
+            <td class="py-2 text-right" id="print-sub-qty">10.4 m³</td>
+            <td class="py-2 text-right">80.00 €/m³</td>
+            <td class="py-2 text-right font-bold" id="print-sub-price">832.00 €</td>
+          </tr>
+          <tr>
+            <td class="py-2">Drainage-Speicher Noppenschicht + Filtervlies</td>
+            <td class="py-2 text-right" id="print-drain-qty">80 m²</td>
+            <td class="py-2 text-right" id="print-drain-unit-price">8.00 €/m²</td>
+            <td class="py-2 text-right font-bold" id="print-drain-price">640.00 €</td>
+          </tr>
+          <tr>
+            <td class="py-2">Wurzelfeste Dachabdichtungs-TPO-Membran</td>
+            <td class="py-2 text-right" id="print-water-qty">80 m²</td>
+            <td class="py-2 text-right">20.00 €/m²</td>
+            <td class="py-2 text-right font-bold" id="print-water-price">1,600.00 €</td>
+          </tr>
+          <tr>
+            <td class="py-2">Pflanzenmix (sukkulente Hauswurzen und Sedum)</td>
+            <td class="py-2 text-right" id="print-plants-qty">1280 Stk.</td>
+            <td class="py-2 text-right">Durchschnittlich 1.50 €</td>
+            <td class="py-2 text-right font-bold" id="print-plants-price">1,820.00 €</td>
+          </tr>
+          <tr id="print-install-row" class="hidden">
+            <td class="py-2 font-semibold">Einbau, Montage und Bepflanzung des Gesamtsystems</td>
+            <td class="py-2 text-right">80 m²</td>
+            <td class="py-2 text-right">30.00 €/m²</td>
+            <td class="py-2 text-right font-bold" id="print-install-price">2,400.00 €</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="font-black text-sm text-forest-750 bg-gray-150 border-t-2 border-gray-300">
+            <td class="py-3 uppercase">GESAMTE INVESTITIONSSCHÄTZUNG</td>
+            <td class="py-3"></td>
+            <td class="py-3"></td>
+            <td class="py-3 text-right" id="print-total-price">4,892.00 €</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Ecological & thermodynamic print section -->
+    <div class="grid grid-cols-2 gap-8">
+      <div class="space-y-3">
+        <h3 class="font-serif font-bold text-lg border-b border-gray-300 pb-1.5 text-forest-700">2. ÖKOLOGISCHE DATEN</h3>
+        <ul class="space-y-2 text-xs">
+          <li>• CO₂-Sequestrierung: <strong id="print-co2">120 kg</strong> jährlich.</li>
+          <li>• Stromeinsparung (Kühlung): <strong id="print-energy">200 €</strong> jährlich.</li>
+          <li>• Regenwasserrückhalt: <strong id="print-water">36.000 Liter</strong> jährlich.</li>
+          <li>• Biodiversität: Bietet Lebensraum für Bestäuber (Bienen und Schmetterlinge).</li>
+        </ul>
+      </div>
+      <div class="space-y-3">
+        <h3 class="font-serif font-bold text-lg border-b border-gray-300 pb-1.5 text-forest-700">3. VEGETATIONSSPEZIFIKATIONSPLAN</h3>
+        <p class="text-xs text-gray-500 mb-2">Automatisch berechnete und optimierte Verteilung des Pflanzenmaterials auf dem Dach:</p>
+        <div class="space-y-1.5 text-xs font-semibold" id="print-plant-mix-breakdown">
+          <!-- Dynamic plant content populated on printing -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Official footnotes -->
+    <div class="border-t border-gray-300 pt-6 text-3xs text-gray-400 space-y-1 leading-normal">
+      <p>
+        * HINWEIS: Dieses Dokument stellt eine Vorschätzung dar und wurde auf Basis durchschnittlicher Marktwerte für Österreich und Deutschland im Jahr 2026 berechnet.
+      </p>
+      <p>
+        * Vor jeglichen Baumaßnahmen ist ein Statiker zur Prüfung der Tragfähigkeit der Gebäudekonstruktion hinzuzuziehen. Datenquellen: PMC Gartenbau-Studien, Bauder DE/AT.
+      </p>
+    </div>
+  </section>
+
+  <!-- ALWAYS VISIBLE VEGETATION CATALOGUE -->
+  <section id="baza-biljaka" class="bg-white/40 dark:bg-forest-900/40 backdrop-blur-md py-16 px-6 md:px-12 border-t border-forest-100 dark:border-forest-800/50 no-print">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <!-- Section Title -->
+      <div class="text-center space-y-4">
+        <span class="text-xs font-bold uppercase tracking-widest text-forest-500 dark:text-mint">Gartenbau-Datenbank</span>
+        <h2 class="font-serif font-extrabold text-3xl sm:text-4xl text-forest-800 dark:text-white">Alle Pflanzen für Gründächer</h2>
+        <p class="text-forest-600 dark:text-forest-300 max-w-xl mx-auto text-sm sm:text-base">
+          Durchsuchen Sie den vollständigen Katalog mit 38 Pflanzenarten, die für Gründächer getestet und optimiert sind.
+        </p>
+      </div>
+
+      <!-- Glassmorphic Filter Chips -->
+      <div class="flex flex-wrap justify-center gap-2" id="catalog-global-filter-bar">
+        <button onclick="filterGlobalCatalog('all')" id="btn-gfilt-all" class="px-4 py-2 text-xs font-bold rounded-xl bg-forest-600 dark:bg-mint text-white dark:text-forest-900 shadow-md transition-all">Alle Arten</button>
+        <button onclick="filterGlobalCatalog('sedum')" id="btn-gfilt-sedum" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">Sedume</button>
+        <button onclick="filterGlobalCatalog('cuvarkuca')" id="btn-gfilt-cuvarkuca" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">Hauswurzen</button>
+        <button onclick="filterGlobalCatalog('bilje')" id="btn-gfilt-bilje" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">Kräuter</button>
+        <button onclick="filterGlobalCatalog('cvijece')" id="btn-gfilt-cvijece" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">Blumen</button>
+        <button onclick="filterGlobalCatalog('trava')" id="btn-gfilt-trava" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">Gräser</button>
+        <button onclick="filterGlobalCatalog('grmlje')" id="btn-gfilt-grmlje" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">Sträucher</button>
+        <button onclick="filterGlobalCatalog('med')" id="btn-gfilt-med" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">🌊 Mediterran</button>
+        <button onclick="filterGlobalCatalog('kon')" id="btn-gfilt-kon" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">🌾 Kontinental</button>
+        <button onclick="filterGlobalCatalog('ext')" id="btn-gfilt-ext" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">Extensiv</button>
+        <button onclick="filterGlobalCatalog('int')" id="btn-gfilt-int" class="px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all">Intensiv</button>
+      </div>
+
+      <!-- Hover-Animated Cards Grid -->
+      <div id="grid-global-catalogue" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Populated dynamically by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="w-full bg-forest-800 text-forest-300 dark:bg-forest-950 dark:text-forest-400 text-center py-12 px-6 border-t border-forest-700/40 no-print">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 rounded-lg bg-forest-700 dark:bg-mint flex items-center justify-center text-white dark:text-forest-900">
+          <i class="fa-solid fa-leaf text-sm"></i>
+        </div>
+        <span class="font-serif font-extrabold text-white text-base">Gründach Simulator</span>
+      </div>
+      <p class="text-xs font-medium">
+        Die Datenbank enthält 38 Pflanzenarten, getestet für mitteleuropäisches Klima.
+      </p>
+      <p class="text-3xs text-forest-400">
+        &copy; 2026 <span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:10px;">2LMF <span style="color:#E67E22;">PRO</span></span> · Entwickelt von Sharp Shark Digital. Alle Rechte vorbehalten.
+      </p>
+    </div>
+  </footer>
+
+  <!-- PLAT DATABASES (38 Plants matching plants.json details) -->
+  <script type="text/javascript">
+    const BILJKE = [
+      { id:1,  ime_hr:"Scharfe Fetthenne / Goldmoos-Sedum", ime_lat:"Sedum acre", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-30, pm2:16, cijena:0.93, supstrat:"4–8", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Nahezu wartungsfrei; gelbe Blüten Juni–Juli." },
+      { id:2,  ime_hr:"Weißes Sedum", ime_lat:"Sedum album", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-30, pm2:16, cijena:2.00, supstrat:"4–10", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Äußerst robuste Pionierart; weiße Blüten im Sommer." },
+      { id:3,  ime_hr:"Felsen-Sedum", ime_lat:"Sedum rupestre", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-35, pm2:16, cijena:0.93, supstrat:"4–10", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Gut verwurzelt und windresistent; ideal für geneigte Flächen." },
+      { id:4,  ime_hr:"Spanisches Sedum", ime_lat:"Sedum hispanicum", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-20, pm2:20, cijena:1.50, supstrat:"5–10", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Kleine weiß-rosa Blüten; ausgezeichnet für Küstendächer." },
+      { id:5,  ime_hr:"Kaukasisches Sedum", ime_lat:"Phedimus spurius", tip_krova:"ekstenzivni", klima:"kontinentalna", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-35, pm2:16, cijena:1.50, supstrat:"6–12", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Gut für kontinentales Klima; rosa-rote Blüten." },
+      { id:6,  ime_hr:"Kamtschatka-Sedum", ime_lat:"Sedum kamtschaticum", tip_krova:"ekstenzivni", klima:"kontinentalna", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-40, pm2:12, cijena:2.00, supstrat:"6–12", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Eines der frostresistentesten Sedum; goldgelbe Blüten." },
+      { id:7,  ime_hr:"Mediterranes Sedum", ime_lat:"Sedum sediforme", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-12, pm2:12, cijena:2.00, supstrat:"5–15", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Hervorragende Leistung auf Mittelmeerdächern; nicht für starken Frost." },
+      { id:8,  ime_hr:"Herbst-Sedum", ime_lat:"Hylotelephium spectabile", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-20, pm2:9, cijena:3.50, supstrat:"12–20", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Rosa Blüten August–September; zieht Bienen an." },
+      { id:9,  ime_hr:"Hauswurz / Dachwurz", ime_lat:"Sempervivum tectorum", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-25, pm2:20, cijena:2.00, supstrat:"4–8", tip_biljke:"cuvarkuca", boja:"🔵", odrzavanje:"Jahrhundertealte Dachart; vermehrt sich durch Rosetten; minimale Pflege." },
+      { id:10, ime_hr:"Spinnweb-Hauswurz", ime_lat:"Sempervivum arachnoideum", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-25, pm2:25, cijena:1.50, supstrat:"4–8", tip_biljke:"cuvarkuca", boja:"🔵", odrzavanje:"Dekorative weiße Fäden zwischen Rosetten; für sehr dünne Dachsubstrate." },
+      { id:11, ime_hr:"Hardy Eisblume", ime_lat:"Delosperma cooperi", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-18, pm2:9, cijena:3.00, supstrat:"6–14", tip_biljke:"cuvarkuca", boja:"🔵", odrzavanje:"Leuchtend rosa Blüten im Sommer; benötigt hervorragende Drainage." },
+      { id:12, ime_hr:"Sandthymian / Quendel", ime_lat:"Thymus serpyllum", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-30, pm2:12, cijena:1.59, supstrat:"6–12", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Aromatischer Bodendecker bis 10 cm; lila Blüten ziehen Bienen an." },
+      { id:13, ime_hr:"Thymian", ime_lat:"Thymus vulgaris", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-20, pm2:9, cijena:2.00, supstrat:"8–15", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Aromatisches Halbsträuchlein; jährlich leicht schneiden." },
+      { id:14, ime_hr:"Lavendel", ime_lat:"Lavandula angustifolia", tip_krova:"intenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-20, pm2:4, cijena:3.50, supstrat:"20–30", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Benötigt tieferes Substrat und Rückschnitt auf 1/3 nach der Sommerblüte." },
+      { id:15, ime_hr:"Rosmarin", ime_lat:"Salvia rosmarinus", tip_krova:"intenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-12, pm2:2, cijena:3.00, supstrat:"20–35", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Jährlicher Rückschnitt; liebt Meeresklima, Sonne und Salzluft." },
+      { id:16, ime_hr:"Salbei", ime_lat:"Salvia officinalis", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-20, pm2:4, cijena:2.50, supstrat:"12–20", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Heilsam und dekorativ; lila Blütenähren ziehen Bestäuber an." },
+      { id:17, ime_hr:"Curry-Kraut / Strohblume", ime_lat:"Helichrysum italicum", tip_krova:"oba", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-10, pm2:4, cijena:3.50, supstrat:"10–20", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Aromatisches Silberlaub und goldene Blüten; nicht für strenge Kontinentalwinter." },
+      { id:18, ime_hr:"Oregano", ime_lat:"Origanum vulgare", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-25, pm2:9, cijena:2.00, supstrat:"8–15", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Breitet sich schnell aus und verträgt Trockenheit gut; auch für Halbintensivdächer." },
+      { id:19, ime_hr:"Meerfenchel", ime_lat:"Crithmum maritimum", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-8, pm2:6, cijena:4.00, supstrat:"7–15", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Einheimische Küstenpflanze; außergewöhnliche Salz- und Trockenheitstoleranz." },
+      { id:20, ime_hr:"Meerlavendel", ime_lat:"Limonium virgatum", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-10, pm2:6, cijena:4.00, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Wunderschöne blauviolette Blüten; ausgezeichnet für Dächer direkt am Meer." },
+      { id:21, ime_hr:"Grasnelke", ime_lat:"Armeria maritima", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:true, mraz:-30, pm2:12, cijena:4.00, supstrat:"8–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Rosa runde Blüten von Frühling bis Herbst; salzresistent." },
+      { id:22, ime_hr:"Karthäuser-Nelke", ime_lat:"Dianthus carthusianorum", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-35, pm2:9, cijena:2.50, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Leuchtend rosa Blüten; steigert Biodiversität und verbreitet sich durch Samen." },
+      { id:23, ime_hr:"Blauschwingel", ime_lat:"Festuca glauca", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:true, mraz:-30, pm2:9, cijena:3.00, supstrat:"8–15", tip_biljke:"trava", boja:"🟡", odrzavanje:"Dekoratives bläuliches Niedriggras; alle paar Jahre teilen." },
+      { id:24, ime_hr:"Schaf-Schwingel", ime_lat:"Festuca ovina", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:true, mraz:-30, pm2:9, cijena:2.50, supstrat:"8–15", tip_biljke:"trava", boja:"🟡", odrzavanje:"Bildet dichte niedrige Polster; wunderschön mit Sedum kombinierbar." },
+      { id:25, ime_hr:"Schafgarbe", ime_lat:"Achillea millefolium", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-35, pm2:9, cijena:2.50, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Weiße und gelbe Blüten, außergewöhnliche Robustheit; zieht Bienen an." },
+      { id:26, ime_hr:"Zwerg-Schwertlilie", ime_lat:"Iris pumila", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-30, pm2:9, cijena:3.50, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Niedrige Iris (bis 20 cm); blaue Blüten im frühen Frühling." },
+      { id:27, ime_hr:"Wollziest / Lammsohr", ime_lat:"Stachys byzantina", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-25, pm2:9, cijena:3.00, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Silbrig behaarte Blätter mit samtartiger Textur; zieht Blicke auf sich." },
+      { id:28, ime_hr:"Frühlings-Fingerkraut", ime_lat:"Potentilla neumanniana", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-30, pm2:12, cijena:3.00, supstrat:"8–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Goldener niedriger Blütenteppich im frühen Frühling; immergrün." },
+      { id:29, ime_hr:"Trauben-Steinbrech", ime_lat:"Saxifraga paniculata", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-30, pm2:16, cijena:2.00, supstrat:"6–12", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Bildet kleine Rosetten, aus denen im Juni kleine weiße Blüten sprießen." },
+      { id:30, ime_hr:"Ziersalbei", ime_lat:"Salvia nemorosa", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-30, pm2:6, cijena:3.00, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Wunderschöne dunkelviolette Blütenkerzen; Rückschnitt fördert erneute Herbstblüte." },
+      { id:31, ime_hr:"Blaukissen / Aubrieta", ime_lat:"Aubrieta deltoidea", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:12, cijena:3.00, supstrat:"8–12", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Reichhaltige violette Frühlingskaskaden; stammt von Kalksteinfelsen." },
+      { id:32, ime_hr:"Teppich-Zwergmispel", ime_lat:"Cotoneaster dammeri", tip_krova:"intenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:2, cijena:3.30, supstrat:"20–30", tip_biljke:"grmlje", boja:"🟤", odrzavanje:"Kriechender Zwergstrauch mit roten Herbstbeeren; immergrün." },
+      { id:33, ime_hr:"Fächerkotoneaster", ime_lat:"Cotoneaster horizontalis", tip_krova:"intenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:1, cijena:5.00, supstrat:"25–40", tip_biljke:"grmlje", boja:"🟤", odrzavanje:"Flaches Wachstum, wunderschöne rote Beeren die den ganzen Winter halten." },
+      { id:34, ime_hr:"Japanische Spiraea", ime_lat:"Spiraea japonica", tip_krova:"intenzivni", klima:"kontinentalna", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:1, cijena:5.00, supstrat:"25–40", tip_biljke:"grmlje", boja:"🟤", odrzavanje:"Kompakter Zierstrauch; rosa Blüten Mitte Sommer." },
+      { id:35, ime_hr:"Heidekraut / Besenheide", ime_lat:"Calluna vulgaris", tip_krova:"oba", klima:"kontinentalna", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:4, cijena:4.00, supstrat:"15–25", tip_biljke:"grmlje", boja:"🟤", odrzavanje:"Benötigt leicht saures Torfsubstrat; üppige rosa Herbstblüte." },
+      { id:36, ime_hr:"Zistrose", ime_lat:"Cistus salviifolius", tip_krova:"intenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-12, pm2:1, cijena:5.00, supstrat:"20–35", tip_biljke:"grmlje", boja:"🟤", odrzavanje:"Einheimische dalmatinische Zistrose mit weißen Blüten; außergewöhnliche Trockenheitsresistenz." },
+      { id:37, ime_hr:"Mediterranes Gras", ime_lat:"Brachypodium phoenicoides", tip_krova:"oba", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-15, pm2:6, cijena:3.00, supstrat:"12–20", tip_biljke:"trava", boja:"🟡", odrzavanje:"Dekoratives Büschelgras, wunderschöne goldbraune Herbstfärbung." },
+      { id:38, ime_hr:"Schnittlauch", ime_lat:"Allium schoenoprasum", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-30, pm2:12, cijena:2.00, supstrat:"10–15", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Dekorativ und essbar; wunderschöne rosa-violette Pompons im Frühling." }
+    ];
+
+    // --- STATE STATE VARIABLES ---
+    let projectState = {
+      region: 'mediteranska',
+      area: 80,
+      roofType: 'ekstenzivni',
+      hortiTab: 'auto',
+      customSelected: new Set(),
+      catalogFilter: 'all',
+      includeInstallation: false
+    };
+
+    // --- 3D LAYER METADATA ---
+    const LAYER_META = {
+      1: {
+        name: "Vegetationsschicht",
+        desc: "Die oberste Schicht des Gründachs, bestehend aus hochresistenten Sedumen, Sukkulenten, Kräutern oder Gräsern. Bietet ästhetischen Wert, senkt die Umgebungstemperatur und schafft natürlichen Lebensraum.",
+        thick: "1 - 5 cm",
+        func: "Ästhetik, Kühlung & Biodiversität"
+      },
+      2: {
+        name: "Substrat für Gründächer",
+        desc: "Spezialisiertes leichtgewichtiges Wachstumsmedium mit hoher Luft- und Wasserkapazität. Enthält eine Mischung aus vulkanischem Blähton, Lava und Kompost. Die Tiefe richtet sich nach dem Ausführungstyp.",
+        thick: "Je nach Ausführungstyp", // Dynamically populated based on Extensive (10cm) or Intensive (25cm)
+        func: "Wurzelernährung und -stabilisierung"
+      },
+      3: {
+        name: "Filtervlies (Geotextil)",
+        desc: "Dampfdurchlässiges Geotextilvlies, das verhindert, dass Feinerde- und Staubpartikel aus dem Substrat in die Drainageschicht ausgespült werden. Dadurch wird die Langlebigkeit des Gesamtsystems erhalten.",
+        thick: "1 - 2 mm",
+        func: "Filtration und Verstopfungsschutz"
+      },
+      4: {
+        name: "Drainage-Speicherschicht",
+        desc: "Profilierte Noppenfolie, die eine bestimmte Wassermenge in den Näpfen für die Pflanzenernährung speichert, während alle überschüssigen Niederschlagswasser sicher zu den Dachabläufen abgeleitet werden.",
+        thick: "2,5 - 4 cm",
+        func: "Wasserableitung und Feuchtespeicherung"
+      },
+      5: {
+        name: "Wurzelfeste Dachabdichtung",
+        desc: "Die kritischste Schutzschicht des Gebäudes. Spezielle wurzelfeste TPO-Abdichtungsmembran mit verstärkten Beschichtungen gegen das Eindringen aggressiver Wurzeln. Schützt die Betonplatte und Innenräume vor Feuchtigkeit.",
+        thick: "1,5 - 2,5 mm",
+        func: "Absoluter Schutz der Tragkonstruktion"
+      },
+      6: {
+        name: "Dachplatte (Stahlbeton-Tragkonstruktion)",
+        desc: "Ihre bestehende Stahlbeton-Dachplatte, Stahlträger oder Holzbalken. Sie muss statisch berechnet sein, um das gesamte Nassgewicht des Gründachs zu tragen.",
+        thick: "Tragkonstruktion des Gebäudes",
+        func: "Statische Tragfähigkeit des Gebäudes"
+      }
+    };
+
+    // --- DARK MODE TOGGLE ---
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        themeIcon.className = 'fa-solid fa-moon text-forest-600';
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        themeIcon.className = 'fa-solid fa-sun text-mint';
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Load theme from cache
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      const themeIcon = document.getElementById('theme-icon');
+      if (themeIcon) themeIcon.className = 'fa-solid fa-sun text-mint';
+    }
+
+    // --- EXPLODE 3D LAYERS SLIDER ---
+    function updateExplode(val) {
+      document.documentElement.style.setProperty('--explode', val);
+      document.getElementById('explode-percent').textContent = Math.round(val * 100) + '%';
+    }
+
+    // Focus on particular layer in 3D stack
+    function focus3DLayer(num) {
+      // Deactivate all previous
+      document.querySelectorAll('.isometric-layer').forEach(l => l.classList.remove('active-3d'));
+      
+      // Activate selected
+      const el = document.querySelector(`.isometric-layer[data-layer="${num}"]`);
+      if (el) el.classList.add('active-3d');
+      
+      // Update sidebar metadata
+      const meta = LAYER_META[num];
+      document.getElementById('layer-detail-num').textContent = num;
+      document.getElementById('layer-detail-name').textContent = meta.name;
+      document.getElementById('layer-detail-desc').textContent = meta.desc;
+      document.getElementById('layer-detail-func').textContent = meta.func;
+      
+      // Dynamic depth adjustment for substrate (Layer 2)
+      if (num === 2) {
+        const thicknessText = projectState.roofType === 'ekstenzivni' ? '10 cm (Nassgewicht ~110 kg/m²)' : '25 cm (Nassgewicht ~310 kg/m²)';
+        document.getElementById('layer-detail-thick').textContent = thicknessText;
+      } else {
+        document.getElementById('layer-detail-thick').textContent = meta.thick;
+      }
+    }
+
+    // --- AREA SYNC ---
+    function updateArea(val) {
+      const area = Math.max(10, Math.min(500, parseInt(val) || 80));
+      projectState.area = area;
+      document.getElementById('input-area').value = area;
+      document.getElementById('slider-area').value = area;
+      
+      calculateAll();
+    }
+
+    // --- REGION ASSIGNMENT ---
+    function setRegion(reg) {
+      projectState.region = reg;
+      
+      // Active states for cards
+      const isMed = reg === 'mediteranska';
+      document.getElementById('card-reg-med').className = isMed 
+        ? "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-forest-50 dark:bg-forest-800/80 border-forest-500 dark:border-mint" 
+        : "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200";
+      
+      document.getElementById('card-reg-kon').className = !isMed 
+        ? "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-forest-50 dark:bg-forest-800/80 border-forest-500 dark:border-mint" 
+        : "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200";
+      
+      // Checkmark highlights
+      document.getElementById('chk-reg-med').className = isMed ? "absolute top-3 right-3 h-5 w-5 rounded-full bg-forest-600 dark:bg-mint text-white dark:text-forest-900 flex items-center justify-center border-0" : "absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center";
+      document.getElementById('chk-reg-kon').className = !isMed ? "absolute top-3 right-3 h-5 w-5 rounded-full bg-forest-600 dark:bg-mint text-white dark:text-forest-900 flex items-center justify-center border-0" : "absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center";
+      
+      // Reset custom selection if region changed to guarantee compatibility check
+      projectState.customSelected.clear();
+      
+      calculateAll();
+    }
+
+    // --- ROOF TYPE ASSIGNMENT ---
+    function setRoofType(type) {
+      projectState.roofType = type;
+      
+      const isExt = type === 'ekstenzivni';
+      document.getElementById('card-roof-ext').className = isExt 
+        ? "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-forest-50 dark:bg-forest-800/80 border-forest-500 dark:border-mint" 
+        : "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200";
+      
+      document.getElementById('card-roof-int').className = !isExt 
+        ? "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-forest-50 dark:bg-forest-800/80 border-forest-500 dark:border-mint" 
+        : "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200";
+      
+      document.getElementById('chk-roof-ext').className = isExt ? "absolute top-3 right-3 h-5 w-5 rounded-full bg-forest-600 dark:bg-mint text-white dark:text-forest-900 flex items-center justify-center border-0" : "absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center";
+      document.getElementById('chk-roof-int').className = !isExt ? "absolute top-3 right-3 h-5 w-5 rounded-full bg-forest-600 dark:bg-mint text-white dark:text-forest-900 flex items-center justify-center border-0" : "absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center";
+      
+      // Update focused layer description weight if Layer 2 is selected
+      const activeLayerNum = document.getElementById('layer-detail-num').textContent;
+      if (activeLayerNum == '2') {
+        focus3DLayer(2);
+      }
+      
+      // Reset custom selection if roof type changed
+      projectState.customSelected.clear();
+
+      calculateAll();
+    }
+
+    // --- SWITCH HORICULTURE TAB ---
+    function switchHortiTab(tab) {
+      projectState.hortiTab = tab;
+      
+      const btnAuto = document.getElementById('btn-tab-auto');
+      const btnCustom = document.getElementById('btn-tab-custom');
+      const viewAuto = document.getElementById('horti-tab-auto');
+      const viewCustom = document.getElementById('horti-tab-custom');
+      
+      if (tab === 'auto') {
+        btnAuto.className = "px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-forest-800 dark:text-white bg-white dark:bg-forest-700 shadow-md";
+        btnCustom.className = "px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-forest-500 dark:text-forest-300 hover:text-forest-800";
+        viewAuto.classList.remove('hidden');
+        viewCustom.classList.add('hidden');
+      } else {
+        btnCustom.className = "px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-forest-800 dark:text-white bg-white dark:bg-forest-700 shadow-md";
+        btnAuto.className = "px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-forest-500 dark:text-forest-300 hover:text-forest-800";
+        viewCustom.classList.remove('hidden');
+        viewAuto.classList.add('hidden');
+        
+        initCustomCatalogGrid();
+        renderCustomMixSidebar();
+      }
+      
+      calculateAll();
+    }
+
+    // --- INCLUDE INSTALLATION CHECK ---
+    function toggleInstallation(checked) {
+      projectState.includeInstallation = checked;
+      calculateAll();
+    }
+
+    function pickMix(filtered, n) {
+      // Uzmi po jedan iz svake grupe, do n ukupno
+      const groups = {};
+      filtered.forEach(b => {
+        if (!groups[b.tip_biljke]) groups[b.tip_biljke] = [];
+        groups[b.tip_biljke].push(b);
+      });
+
+      const result = [];
+      const groupOrder = ['sedum', 'cuvarkuca', 'bilje', 'cvijece', 'trava', 'grmlje'];
+
+      // Prvo jedan od svakog tipa
+      groupOrder.forEach(g => {
+        if (groups[g] && groups[g].length) result.push(groups[g][0]);
+      });
+
+      // Dopuni do n iz sortiranih filtriranih
+      filtered.forEach(b => {
+        if (result.length >= n) return;
+        if (!result.find(r => r.id === b.id)) result.push(b);
+      });
+
+      return result.slice(0, n);
+    }
+
+    // --- MAIN ENGINE: CALCULATION CORE ---
+    function calculateAll() {
+      const area = projectState.area;
+      const isExt = projectState.roofType === 'ekstenzivni';
+      const isMed = projectState.region === 'mediteranska';
+      
+      // 1. Calculate substrate
+      const subDepth = isExt ? 0.10 : 0.25; // 10 cm Extensive, 25 cm Intensive
+      const subVol = +(area * subDepth * 1.3).toFixed(1); // 1.3 compaction factor
+      const subPrice = +(subVol * 80).toFixed(2); // 80 EUR/m³ substrate cost
+      
+      // 2. Calculate drainage and geofleece
+      const drainPricePerM2 = isExt ? 8 : 12; // 8 EUR Extensive, 12 EUR Intensive
+      const drainPrice = +(area * drainPricePerM2).toFixed(2);
+      
+      // 3. Calculate waterproofing
+      const waterPrice = +(area * 20).toFixed(2); // 20 EUR/m²
+      
+      // 4. Calculate plants mix
+      let activePlants = [];
+      let plantQtyTotal = 0;
+      let plantPriceTotal = 0;
+      let breakdownHtml = "";
+      let printBreakdown = "";
+      
+      if (projectState.hortiTab === 'auto') {
+        // Automatic professional algorithm picks 6 plants
+        // Filter compatible
+        const compatible = BILJKE.filter(b => {
+          const regOk = b.klima === projectState.region || b.klima === 'oboje';
+          const typeOk = b.tip_krova === projectState.roofType || b.tip_krova === 'oba';
+          return regOk && typeOk;
+        });
+        
+        // Sort by drought resistance score + salt resistance score
+        compatible.sort((a, b) => {
+          let scoreA = (a.otpornost_na_sušu === 'visoka' ? 2 : 1) + (a.tolerancija_sol && isMed ? 1 : 0);
+          let scoreB = (b.otpornost_na_sušu === 'visoka' ? 2 : 1) + (b.tolerancija_sol && isMed ? 1 : 0);
+          return scoreB - scoreA;
+        });
+        
+        // Pick best 6 mix using pickMix
+        const recommended6 = pickMix(compatible, 6);
+        activePlants = recommended6.slice(0, 3);
+        const portions = [0.5, 0.3, 0.2]; // 50%, 30%, 20% distribution
+        
+        activePlants.forEach((p, idx) => {
+          const plantPortion = portions[idx];
+          const plantArea = area * plantPortion;
+          const qty = Math.ceil(plantArea * p.pm2);
+          const price = +(qty * p.cijena).toFixed(2);
+          
+          plantQtyTotal += qty;
+          plantPriceTotal += price;
+          
+          breakdownHtml += `
+            <div class="flex items-center justify-between text-2xs p-2 bg-white dark:bg-forest-800/40 rounded-xl border border-forest-100 dark:border-forest-800">
+              <div class="flex items-center gap-2">
+                <span class="text-xs">${p.boja}</span>
+                <div>
+                  <span class="font-bold block text-forest-850 dark:text-white">${p.ime_hr} <span class="font-normal text-forest-400">(${Math.round(plantPortion*100)}%)</span></span>
+                  <span class="text-3xs text-forest-450">${qty} Stk. &middot; ${plantArea.toFixed(1)} m² &middot; ${p.pm2} Stk/m²</span>
+                </div>
+              </div>
+              <span class="font-bold text-forest-750 dark:text-mint">${price.toFixed(2)} €</span>
+            </div>`;
+
+          printBreakdown += `
+            <div class="flex justify-between border-b border-gray-150 py-1">
+              <span>${p.ime_hr} (${p.ime_lat}) - ${Math.round(plantPortion*100)}% Fläche</span>
+              <strong>${qty} Stk. / ${price.toFixed(2)} €</strong>
+            </div>`;
+        });
+        
+        // Dynamically update Recommended Mix Banner texts for AUTO
+        document.getElementById('lbl-auto-title').innerHTML = `<i class="fa-solid fa-award text-mint animate-pulse"></i> Professionelle Dachformel`;
+        document.getElementById('lbl-auto-desc').innerHTML = `Unser Algorithmus hat einen Mix der Top-3-Pflanzen erstellt für <span id="lbl-auto-roof" class="font-bold text-forest-800 dark:text-mint">${isExt ? 'Extensivdach' : 'Intensivdach'}</span> in der Region <span id="lbl-auto-reg" class="font-bold text-forest-800 dark:text-mint">${isMed ? 'Mediterran' : 'Kontinental'}</span>. Die weiteren 3 sind Ergänzungsempfehlungen für Biodiversität.`;
+        document.getElementById('lbl-auto-mix-status').textContent = `50% / 30% / 20% Verteilung`;
+        
+        // Render 6 cards (top 3 with quantities/prices, remaining 3 as supplementary recommendations)
+        document.getElementById('grid-recommended-plants').innerHTML = recommended6.map((p, idx) => renderPlantCard(p, idx < 3 ? portions[idx] : null)).join('');
+        
+      } else {
+        // Custom mix mode
+        const selected = BILJKE.filter(b => projectState.customSelected.has(b.id));
+        const numSelected = selected.length;
+        
+        if (numSelected >= 2) {
+          const portion = 1 / numSelected;
+          selected.forEach((p) => {
+            const plantArea = area * portion;
+            const qty = Math.ceil(plantArea * p.pm2);
+            const price = +(qty * p.cijena).toFixed(2);
+            
+            plantQtyTotal += qty;
+            plantPriceTotal += price;
+            
+            breakdownHtml += `
+              <div class="flex items-center justify-between text-2xs p-2 bg-white dark:bg-forest-800/40 rounded-xl border border-forest-100 dark:border-forest-800">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs">${p.boja}</span>
+                  <div>
+                    <span class="font-bold block text-forest-850 dark:text-white">${p.ime_hr} <span class="font-normal text-forest-400">(${Math.round(portion*100)}%)</span></span>
+                    <span class="text-3xs text-forest-450">${qty} Stk. &middot; ${plantArea.toFixed(1)} m² &middot; ${p.pm2} Stk/m²</span>
+                  </div>
+                </div>
+                <span class="font-bold text-forest-750 dark:text-mint">${price.toFixed(2)} €</span>
+              </div>`;
+
+            printBreakdown += `
+              <div class="flex justify-between border-b border-gray-150 py-1">
+                <span>${p.ime_hr} (${p.ime_lat}) - ${Math.round(portion*100)}% Fläche</span>
+                <strong>${qty} Stk. / ${price.toFixed(2)} €</strong>
+              </div>`;
+          });
+
+          // Dynamically update Recommended Mix Banner texts for CUSTOM
+          document.getElementById('lbl-auto-title').innerHTML = `<i class="fa-solid fa-sliders text-mint"></i> Eigene Pflanzenkombination`;
+          document.getElementById('lbl-auto-desc').innerHTML = `Kombination aus <span class="font-bold text-forest-800 dark:text-mint">${numSelected} Pflanzen</span>, die Sie selbst für <span id="lbl-auto-roof" class="font-bold text-forest-800 dark:text-mint">${isExt ? 'Extensivdach' : 'Intensivdach'}</span> in der Region <span id="lbl-auto-reg" class="font-bold text-forest-800 dark:text-mint">${isMed ? 'Mediterran' : 'Kontinental'}</span> ausgewählt haben.`;
+          document.getElementById('lbl-auto-mix-status').textContent = `Gleichmäßige Verteilung (${Math.round(100/numSelected)}% pro Pflanze)`;
+          
+          // Render selected cards
+          document.getElementById('grid-recommended-plants').innerHTML = selected.map(p => renderPlantCard(p, portion)).join('');
+        } else {
+          document.getElementById('grid-recommended-plants').innerHTML = `
+            <div class="col-span-full text-center py-12 text-forest-450 text-xs">
+              <i class="fa-solid fa-seedling text-2xl animate-bounce text-mint mb-3 block"></i>
+              Wählen Sie mindestens 2 kompatible Pflanzen aus dem Katalog unten im Tab "Eigener Mix (Custom)".
+            </div>`;
+        }
+      }
+      
+      // 5. Installation Cost
+      const installPrice = projectState.includeInstallation ? +(area * 30).toFixed(2) : 0;
+      
+      // 6. Net Total Cost
+      const totalCost = subPrice + drainPrice + waterPrice + plantPriceTotal + installPrice;
+      const pricePerM2 = +(totalCost / area).toFixed(2);
+      
+      // 7. Energy and Ecological Savings estimates
+      const energySavings = +(area * (isExt ? 3.5 : 5.5)).toFixed(0); // €/year savings
+      const co2Absorption = +(area * (isExt ? 1.5 : 3.5)).toFixed(0); // kg/year CO2
+      const waterRetained = +(area * (isExt ? 400 : 700)).toFixed(0); // Liters/year rainwater retained
+      
+      // 8. ROI (Return on Investment) calculation
+      const roiYears = energySavings > 0 ? +(totalCost / energySavings).toFixed(1) : 0.0;
+      
+      // 9. Static opterećenje estimate weight
+      const totalWeight = isExt ? 110 : 310;
+      
+      // --- UPDATE DOM VIEWS ---
+      document.getElementById('lbl-total-price').textContent = totalCost.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById('lbl-price-m2').textContent = pricePerM2.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById('lbl-roi-years').textContent = roiYears.toFixed(1);
+      
+      document.getElementById('lbl-val-co2').textContent = co2Absorption.toLocaleString('de-DE') + ' kg/J.';
+      document.getElementById('lbl-val-energy').textContent = energySavings.toLocaleString('de-DE') + ' €/J.';
+      document.getElementById('lbl-val-water').textContent = waterRetained.toLocaleString('de-DE') + ' L/J.';
+      document.getElementById('lbl-static-weight').textContent = totalWeight + ' kg/m²';
+      
+      // Update Spec table cells
+      document.getElementById('cell-sub-qty').textContent = subVol + ' m³';
+      document.getElementById('cell-sub-price').textContent = subPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+
+      document.getElementById('cell-drain-qty').textContent = area + ' m²';
+      document.getElementById('cell-drain-price').textContent = drainPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+
+      document.getElementById('cell-water-qty').textContent = area + ' m²';
+      document.getElementById('cell-water-price').textContent = waterPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+
+      document.getElementById('cell-plants-qty').textContent = plantQtyTotal + ' Stk.';
+      document.getElementById('cell-plants-price').textContent = plantPriceTotal.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+
+      document.getElementById('cell-install-price').textContent = installPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+      
+      // --- DYNAMIC SVG DONUT UPDATE ---
+      updateDonutChart(subPrice, drainPrice, plantPriceTotal, waterPrice, totalCost);
+      
+      // --- DYNAMIC SUMMER TEMP PLOT UPDATE ---
+      updateTempChart();
+      
+      // --- UPDATE PRINT DATA (SYNC PRINT MODEL) ---
+      document.getElementById('print-date').textContent = new Date().toLocaleDateString('de-DE');
+      document.getElementById('print-project-id').textContent = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('print-reg-name').textContent = isMed ? 'Mediterran (Mittelmeerküste, Südtirol)' : 'Kontinental (Wien, Bayern, Alpenvorland)';
+      document.getElementById('print-area-val').textContent = area;
+      document.getElementById('print-roof-type-name').textContent = isExt ? 'Extensivdach (Sedum und Hauswurzen)' : 'Intensivdach (Dachgarten - Sträucher und Stauden)';
+      
+      document.getElementById('print-sub-qty').textContent = subVol + ' m³';
+      document.getElementById('print-sub-price').textContent = subPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+
+      document.getElementById('print-drain-qty').textContent = area + ' m²';
+      document.getElementById('print-drain-unit-price').textContent = drainPricePerM2.toFixed(2) + ' €/m²';
+      document.getElementById('print-drain-price').textContent = drainPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+
+      document.getElementById('print-water-qty').textContent = area + ' m²';
+      document.getElementById('print-water-price').textContent = waterPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+
+      document.getElementById('print-plants-qty').textContent = plantQtyTotal + ' Stk.';
+      document.getElementById('print-plants-price').textContent = plantPriceTotal.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+      
+      if (projectState.includeInstallation) {
+        document.getElementById('print-install-row').classList.remove('hidden');
+        document.getElementById('print-install-price').textContent = installPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+      } else {
+        document.getElementById('print-install-row').classList.add('hidden');
+      }
+      
+      document.getElementById('print-total-price').textContent = totalCost.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+      
+      document.getElementById('print-co2').textContent = co2Absorption + ' kg';
+      document.getElementById('print-energy').textContent = energySavings + ' €';
+      document.getElementById('print-water').textContent = waterRetained.toLocaleString('de-DE') + ' Liter';
+      
+      document.getElementById('print-plant-mix-breakdown').innerHTML = printBreakdown || `
+        <p class="text-gray-500 italic">Kein Mix ausgewählt.</p>`;
+    }
+
+    // Donut Stroke Recalculation
+    function updateDonutChart(sub, drain, plants, water, total) {
+      if (total === 0) return;
+      
+      const subPct = (sub / total) * 100;
+      const drainPct = (drain / total) * 100;
+      const plantsPct = (plants / total) * 100;
+      const waterPct = (water / total) * 100;
+      
+      document.getElementById('legend-sub').textContent = Math.round(subPct) + '%';
+      document.getElementById('legend-drain').textContent = Math.round(drainPct) + '%';
+      document.getElementById('legend-plants').textContent = Math.round(plantsPct) + '%';
+      document.getElementById('legend-water').textContent = Math.round(waterPct) + '%';
+      
+      document.getElementById('donut-center-total').textContent = Math.round(total) + ' €';
+      
+      // Circumference of donut is 100 units!
+      const elSub = document.getElementById('donut-sub');
+      const elDrain = document.getElementById('donut-drain');
+      const elPlants = document.getElementById('donut-plants');
+      const elWater = document.getElementById('donut-water');
+      
+      elSub.setAttribute('stroke-dasharray', `${subPct} ${100 - subPct}`);
+      elSub.setAttribute('stroke-dashoffset', '0');
+      
+      elDrain.setAttribute('stroke-dasharray', `${drainPct} ${100 - drainPct}`);
+      elDrain.setAttribute('stroke-dashoffset', `-${subPct}`);
+      
+      elPlants.setAttribute('stroke-dasharray', `${plantsPct} ${100 - plantsPct}`);
+      elPlants.setAttribute('stroke-dashoffset', `-${subPct + drainPct}`);
+      
+      elWater.setAttribute('stroke-dasharray', `${waterPct} ${100 - waterPct}`);
+      elWater.setAttribute('stroke-dashoffset', `-${subPct + drainPct + plantsPct}`);
+    }
+
+    // Temperature Mitigation updates
+    function updateTempChart() {
+      const isMed = projectState.region === 'mediteranska';
+      const isExt = projectState.roofType === 'ekstenzivni';
+      
+      let tempClassic = isMed ? 82 : 72; // Black roof ljeti
+      let tempAir = isMed ? 38 : 33;     // Ambient temperature
+      let tempGreen = isExt ? 29 : 26;   // Green roof surface
+      let tempRoom = 23;                 // Target HVAC set point
+      
+      document.getElementById('temp-lbl-classic').textContent = tempClassic + ' °C';
+      document.getElementById('temp-lbl-air').textContent = tempAir + ' °C';
+      document.getElementById('temp-lbl-green').textContent = tempGreen + ' °C';
+      document.getElementById('temp-lbl-room').textContent = tempRoom + ' °C';
+      
+      const scaleMax = 90;
+      document.getElementById('temp-bar-classic').style.width = (tempClassic / scaleMax * 100) + '%';
+      document.getElementById('temp-bar-air').style.width = (tempAir / scaleMax * 100) + '%';
+      document.getElementById('temp-bar-green').style.width = (tempGreen / scaleMax * 100) + '%';
+      document.getElementById('temp-bar-room').style.width = (tempRoom / scaleMax * 100) + '%';
+    }
+
+    // Render plant visual card
+    function renderPlantCard(p, portion) {
+      const isSupplementary = portion === null || portion === undefined;
+      const plantArea = isSupplementary ? projectState.area : projectState.area * portion;
+      const qty = Math.ceil(plantArea * p.pm2);
+      
+      const badgeSuša = p.otpornost_na_sušu === 'visoka' ? '<span class="px-2 py-0.5 rounded bg-green-100 dark:bg-green-950/40 text-3xs font-bold text-green-700 dark:text-green-300"><i class="fa-solid fa-droplet-slash"></i> Trockenheitsfest</span>' : '';
+      const badgeSol = p.tolerancija_sol ? '<span class="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/40 text-3xs font-bold text-blue-700 dark:text-blue-300"><i class="fa-solid fa-water"></i> Salzresistent</span>' : '';
+      const badgeMraz = p.mraz <= -25 ? `<span class="px-2 py-0.5 rounded bg-orange-100 dark:bg-orange-950/40 text-3xs font-bold text-orange-700 dark:text-orange-300"><i class="fa-solid fa-snowflake"></i> Bis ${p.mraz}°C</span>` : '';
+
+      const mixText = isSupplementary
+        ? "Ergänzungsempfehlung"
+        : `Mixanteil: ${Math.round(portion*100)}%`;
+
+      const mixAreaText = isSupplementary
+        ? `<div class="text-forest-450 dark:text-forest-400 font-bold uppercase tracking-wider text-[10px] mb-1">Zusätzliche Wahl für Biodiversität</div>`
+        : `<div class="text-forest-600 dark:text-mint font-bold uppercase tracking-wider text-[10px] mb-1">${Math.round(portion*100)}% Fläche &middot; ${plantArea.toFixed(0)} m²</div>`;
+      
+      return `
+        <div class="glass-panel p-5 rounded-3xl border border-white/40 dark:border-white/10 shadow-premium flex flex-col justify-between group hover:-translate-y-1 hover:shadow-3d-hover transition-all duration-300 relative overflow-hidden">
+          <div class="relative h-44 rounded-2xl overflow-hidden mb-4 bg-forest-100 dark:bg-forest-800">
+            <img src="images/${p.id}.jpg" alt="${p.ime_hr}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='sedum.png'">
+            <div class="absolute top-3 right-3 bg-white dark:bg-forest-900 rounded-full h-9 w-9 flex items-center justify-center text-sm shadow-md">${p.boja}</div>
+            
+            <div class="absolute bottom-3 left-3 bg-forest-900/60 backdrop-blur-md text-white text-3xs font-black uppercase tracking-wider px-3 py-1 rounded-full border border-white/20">
+              ${mixText}
+            </div>
+          </div>
+
+          <div class="space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              ${mixAreaText}
+              <h3 class="font-bold text-base text-forest-850 dark:text-white leading-snug group-hover:text-mint transition-colors">${p.ime_hr}</h3>
+              <p class="text-2xs text-forest-450 italic font-medium mt-0.5">${p.ime_lat}</p>
+              
+              <div class="flex flex-wrap gap-1.5 mt-3">
+                ${badgeSuša}
+                ${badgeSol}
+                ${badgeMraz}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 bg-forest-50 dark:bg-forest-800/40 rounded-xl p-3 text-center my-3">
+              <div>
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none">Dichte:</span>
+                <strong class="text-xs text-forest-800 dark:text-white mt-1 block">${p.pm2} <span class="text-4xs font-normal">/m²</span></strong>
+              </div>
+              <div>
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none">Menge:</span>
+                <strong class="text-xs text-forest-800 dark:text-white mt-1 block">${isSupplementary ? '-' : qty} <span class="text-4xs font-normal">${isSupplementary ? '' : 'Stk'}</span></strong>
+              </div>
+              <div>
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none">Preis:</span>
+                <strong class="text-xs text-forest-800 dark:text-white mt-1 block">${p.cijena.toFixed(2)} <span class="text-4xs font-normal">€</span></strong>
+              </div>
+            </div>
+
+            <div class="border-t border-forest-100 dark:border-forest-800 pt-3 text-3xs text-forest-455 flex items-start gap-1.5 leading-relaxed">
+              <i class="fa-solid fa-circle-info text-2xs text-mint mt-0.5"></i>
+              <span>${p.odrzavanje}</span>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    // --- TAB 2: MANUAL CUSTOM CATALOG FUNCTIONS ---
+    function initCustomCatalogGrid() {
+      renderCustomCatalogGrid();
+    }
+
+    function filterCatalog(f) {
+      projectState.catalogFilter = f;
+      
+      const filterChips = document.querySelectorAll('#catalog-filter-bar button');
+      filterChips.forEach(btn => {
+        const id = btn.id.replace('btn-filt-', '');
+        if (id === f) {
+          btn.className = "px-4 py-2 text-xs font-bold rounded-xl bg-forest-600 dark:bg-mint text-white dark:text-forest-900";
+        } else {
+          btn.className = "px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white";
+        }
+      });
+      
+      renderCustomCatalogGrid();
+    }
+
+    // Render 38 items grid in custom picker
+    function renderCustomCatalogGrid() {
+      const grid = document.getElementById('grid-custom-catalogue');
+      if (!grid) return;
+      
+      const f = projectState.catalogFilter;
+      
+      const filtered = BILJKE.filter(b => {
+        if (f === 'all') return true;
+        return b.tip_biljke === f;
+      });
+      
+      grid.innerHTML = filtered.map(b => {
+        const regOk = b.klima === projectState.region || b.klima === 'oboje';
+        const typeOk = b.tip_krova === projectState.roofType || b.tip_krova === 'oba';
+        const compatible = regOk && typeOk;
+        
+        let incompatReason = "";
+        if (!compatible) {
+          if (!regOk) incompatReason = b.klima === 'mediteranska' ? "Nur Mediterran" : "Nur Kontinental";
+          else if (!typeOk) incompatReason = b.tip_krova === 'ekstenzivni' ? "Extensivdach erforderlich" : "Intensivdach erforderlich";
+        }
+        
+        const isSelected = projectState.customSelected.has(b.id);
+        const cardClass = !compatible
+          ? "opacity-40 grayscale pointer-events-none cursor-not-allowed border-dashed bg-gray-100 dark:bg-forest-850/20"
+          : isSelected
+            ? "border-mint bg-mint/5 dark:bg-mint/10 dark:border-mint"
+            : "border-forest-100 dark:border-forest-800 bg-white dark:bg-forest-800/40 hover:border-mint-300";
+            
+        return `
+          <button onclick="toggleSelectCustomPlant(${b.id})" ${!compatible ? 'disabled' : ''} class="relative flex flex-col p-4 rounded-2xl border-2 text-left group transition-all duration-300 hover:-translate-y-0.5 ${cardClass}">
+            <div class="relative h-20 w-full rounded-xl overflow-hidden mb-2 bg-forest-100 dark:bg-forest-800">
+              <img src="images/${b.id}.jpg" alt="${b.ime_hr}" class="w-full h-full object-cover" onerror="this.src='sedum.png'">
+              <div class="absolute top-2 right-2 bg-white dark:bg-forest-900 rounded-full h-6 w-6 flex items-center justify-center text-xs shadow">${b.boja}</div>
+            </div>
+            
+            <h4 class="font-bold text-xs text-forest-800 dark:text-white leading-tight flex-1">${b.ime_hr}</h4>
+            <p class="text-4xs text-forest-450 italic mt-0.5 leading-none">${b.ime_lat}</p>
+            
+            <div class="flex items-center justify-between mt-3 text-3xs font-semibold text-forest-500 w-full">
+              <span>Dichte: <strong>${b.pm2}/m²</strong></span>
+              <span>Preis: <strong class="text-forest-750 dark:text-mint">${b.cijena.toFixed(2)} €</strong></span>
+            </div>
+
+            ${isSelected ? `
+              <div class="absolute -top-1.5 -right-1.5 bg-mint text-forest-900 rounded-full h-6 w-6 flex items-center justify-center shadow-md border-2 border-white">
+                <i class="fa-solid fa-check text-xs"></i>
+              </div>` : ''}
+
+            ${!compatible ? `
+              <div class="absolute inset-0 flex items-center justify-center bg-black/5 rounded-2xl pointer-events-none">
+                <span class="bg-red-500 text-white font-black text-4xs uppercase tracking-wider px-2 py-0.5 rounded-full shadow-md rotate-12">${incompatReason}</span>
+              </div>` : ''}
+          </button>`;
+      }).join('');
+    }
+
+    // Toggle plant on/off custom selection
+    function toggleSelectCustomPlant(id) {
+      const selected = projectState.customSelected;
+      
+      if (selected.has(id)) {
+        selected.delete(id);
+      } else {
+        if (selected.size >= 6) {
+          alert('Im eigenen Mix können Sie maximal 6 Pflanzen kombinieren, um gartenbauliche Stabilität zu gewährleisten.');
+          return;
+        }
+        selected.add(id);
+      }
+      
+      renderCustomCatalogGrid();
+      renderCustomMixSidebar();
+    }
+
+    // Helper to extract min substrate depth requirement
+    function getMinSubstrateDepth(p) {
+      const match = p.supstrat.match(/(\d+)/);
+      return match ? parseInt(match[1]) : 0;
+    }
+
+    // Render sidebar details for Custom Selection
+    function renderCustomMixSidebar() {
+      const container = document.getElementById('custom-mix-breakdown');
+      const selectedIds = projectState.customSelected;
+      const count = selectedIds.size;
+      
+      document.getElementById('lbl-custom-qty-count').textContent = `Ausgewählt: ${count} ${count === 1 ? 'Pflanze' : 'Pflanzen'} (Min. 2 - Max. 6)`;
+      
+      if (count < 2) {
+        container.innerHTML = `
+          <div class="text-center py-6 text-forest-450 text-xs">
+            <i class="fa-solid fa-seedling text-lg animate-bounce text-mint mb-2 block"></i>
+            Wählen Sie mindestens 2 kompatible Pflanzen aus dem Katalog rechts, um Ihren eigenen Mix zu erstellen.
+          </div>`;
+
+        document.getElementById('btn-apply-custom-mix').disabled = true;
+        document.getElementById('custom-mix-warnings').classList.add('hidden');
+        document.getElementById('lbl-custom-plants-total').textContent = '0.00';
+        return;
+      }
+      
+      const portion = 1 / count;
+      const selected = BILJKE.filter(b => selectedIds.has(b.id));
+      
+      let totalPlantsPrice = 0;
+      let sidebarRows = "";
+      
+      selected.forEach(p => {
+        const plantArea = projectState.area * portion;
+        const qty = Math.ceil(plantArea * p.pm2);
+        const price = qty * p.cijena;
+        
+        totalPlantsPrice += price;
+        
+        sidebarRows += `
+          <div class="flex items-center justify-between p-2 rounded-xl bg-forest-50 dark:bg-forest-800/40 text-xs border border-forest-100 dark:border-forest-800">
+            <div class="flex items-center gap-2">
+              <span>${p.boja}</span>
+              <div>
+                <strong class="block text-forest-850 dark:text-white leading-tight">${p.ime_hr}</strong>
+                <span class="text-3xs text-forest-400">${Math.round(portion*100)}% &middot; ${qty} Stk &middot; ${(qty * p.cijena).toFixed(2)} €</span>
+              </div>
+            </div>
+            <button onclick="toggleSelectCustomPlant(${p.id})" class="h-6 w-6 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 rounded flex items-center justify-center text-2xs transition-colors" title="Entfernen"><i class="fa-solid fa-trash"></i></button>
+          </div>`;
+      });
+      
+      container.innerHTML = `<div class="space-y-2">${sidebarRows}</div>`;
+      document.getElementById('lbl-custom-plants-total').textContent = totalPlantsPrice.toFixed(2);
+      document.getElementById('btn-apply-custom-mix').disabled = false;
+      
+      const warnings = [];
+      const isExt = projectState.roofType === 'ekstenzivni';
+      const isMed = projectState.region === 'mediteranska';
+      
+      if (isExt) {
+        const deepNeed = selected.filter(p => getMinSubstrateDepth(p) > 10);
+        if (deepNeed.length > 0) {
+          warnings.push(`<strong>⚠️ Substrat zu flach:</strong> ${deepNeed.map(p => p.ime_hr).join(', ')} benötigen mehr als 10 cm Substrat. Es wird empfohlen, den Dachtyp auf Intensivdach umzustellen.`);
+        }
+      }
+
+      const hasHighDrought = selected.some(p => p.otpornost_na_sušu === 'visoka');
+      const hasMedDrought = selected.some(p => p.otpornost_na_sušu === 'srednja');
+      if (hasHighDrought && hasMedDrought) {
+        warnings.push(`<strong>⚠️ Gemischte Trockenheitsresistenz:</strong> Sie kombinieren Pflanzen mit hoher und mittlerer Trockenheitsresistenz. Für die Pflege der mittelmäßig resistenten Pflanzen empfehlen wir ein Tropfbewässerungssystem.`);
+      }
+
+      if (isMed) {
+        const noSalt = selected.filter(p => !p.tolerancija_sol);
+        if (noSalt.length > 0) {
+          warnings.push(`<strong>⚠️ Salzempfindlichkeit:</strong> ${noSalt.map(p => p.ime_hr).join(', ')} vertragen Salzeinwirkung schlechter. Falls das Dach direkt am Meer liegt, können sie eingehen.`);
+        }
+      }
+      
+      const warnContainer = document.getElementById('custom-mix-warnings');
+      if (warnings.length > 0) {
+        warnContainer.innerHTML = warnings.map(w => `
+          <div class="p-3 bg-orange-500/10 border border-orange-500/20 text-orange-750 dark:text-orange-450 rounded-xl text-3xs leading-relaxed">
+            ${w}
+          </div>`).join('');
+        warnContainer.classList.remove('hidden');
+      } else {
+        warnContainer.classList.add('hidden');
+      }
+    }
+
+    // Recalculate billing spec with custom mix
+    function applyCustomMix() {
+      // Switch active view to auto to show the grid of cards
+      const btnAuto = document.getElementById('btn-tab-auto');
+      const btnCustom = document.getElementById('btn-tab-custom');
+      const viewAuto = document.getElementById('horti-tab-auto');
+      const viewCustom = document.getElementById('horti-tab-custom');
+      
+      projectState.hortiTab = 'custom';
+      
+      btnAuto.innerHTML = `<i class="fa-solid fa-seedling mr-1.5 text-xs text-mint"></i> Eigener Mix ausgewählt`;
+      btnAuto.className = "px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-forest-800 dark:text-white bg-white dark:bg-forest-700 shadow-md";
+      btnCustom.className = "px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-forest-500 dark:text-forest-300 hover:text-forest-800";
+      
+      viewAuto.classList.remove('hidden');
+      viewCustom.classList.add('hidden');
+      
+      calculateAll();
+      
+      // Scroll smoothly to catalog/katalog section
+      document.getElementById('katalog').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // --- PRINT DETAILED PDF SPECIFICATION REPORT ---
+    function printSummary() {
+      window.print();
+    }
+
+    // --- GLOBAL VEGETATION CATALOG FUNCTIONS ---
+    let globalCatalogFilter = 'all';
+
+    function filterGlobalCatalog(f) {
+      globalCatalogFilter = f;
+      
+      const filterChips = document.querySelectorAll('#catalog-global-filter-bar button');
+      filterChips.forEach(btn => {
+        const id = btn.id.replace('btn-gfilt-', '');
+        if (id === f) {
+          btn.className = "px-4 py-2 text-xs font-bold rounded-xl bg-forest-600 dark:bg-mint text-white dark:text-forest-900 shadow-md transition-all";
+        } else {
+          btn.className = "px-4 py-2 text-xs font-bold rounded-xl border border-forest-200 dark:border-forest-800 hover:bg-forest-50 dark:hover:bg-forest-800 text-forest-750 dark:text-white transition-all";
+        }
+      });
+      
+      renderGlobalCatalogGrid();
+    }
+
+    function renderGlobalCatalogGrid() {
+      const grid = document.getElementById('grid-global-catalogue');
+      if (!grid) return;
+      
+      const f = globalCatalogFilter;
+      
+      const filtered = BILJKE.filter(b => {
+        if (f === 'all') return true;
+        if (f === 'med') return b.klima === 'mediteranska' || b.klima === 'oboje';
+        if (f === 'kon') return b.klima === 'kontinentalna' || b.klima === 'oboje';
+        if (f === 'ext') return b.tip_krova === 'ekstenzivni' || b.tip_krova === 'oba';
+        if (f === 'int') return b.tip_krova === 'intenzivni' || b.tip_krova === 'oba';
+        return b.tip_biljke === f;
+      });
+      
+      grid.innerHTML = filtered.map(b => {
+        const klimaLabel = b.klima === 'mediteranska' ? 'Mediterran' : b.klima === 'kontinentalna' ? 'Kontinental' : 'Beide Klimazonen';
+        const klimaCls = b.klima === 'mediteranska' 
+          ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300' 
+          : b.klima === 'kontinentalna' 
+            ? 'bg-orange-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300' 
+            : 'bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300';
+            
+        const tipLabel = b.tip_krova === 'ekstenzivni' ? 'Extensiv' : b.tip_krova === 'intenzivni' ? 'Intensiv' : 'Beide Typen';
+        const tipCls = b.tip_krova === 'ekstenzivni' 
+          ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' 
+          : b.tip_krova === 'intenzivni' 
+            ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300' 
+            : 'bg-stone-50 dark:bg-stone-900/40 text-stone-700 dark:text-stone-300';
+            
+        const sušaTag = b.otpornost_na_sušu === 'visoka' ? '<span class="px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-950/40 text-[9px] font-bold text-green-700 dark:text-green-300">Trocken ✓</span>' : '';
+        const solTag = b.tolerancija_sol ? '<span class="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/40 text-[9px] font-bold text-blue-700 dark:text-blue-300">Salz ✓</span>' : '';
+        
+        return `
+          <div class="glass-panel p-4 rounded-2xl border border-white/40 dark:border-white/10 shadow-premium flex flex-col justify-between group hover:-translate-y-1 hover:shadow-3d-hover transition-all duration-300">
+            <div class="relative h-32 rounded-xl overflow-hidden mb-3 bg-forest-100 dark:bg-forest-800">
+              <img src="images/${b.id}.jpg" alt="${b.ime_hr}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='sedum.png'">
+              <div class="absolute top-2 right-2 bg-white dark:bg-forest-900 rounded-full h-6 w-6 flex items-center justify-center text-xs shadow-md">${b.boja}</div>
+            </div>
+            
+            <div class="space-y-2 flex-1 flex flex-col justify-between">
+              <div>
+                <h4 class="font-bold text-sm text-forest-850 dark:text-white leading-snug group-hover:text-mint transition-colors">${b.ime_hr}</h4>
+                <p class="text-4xs text-forest-450 italic mt-0.5">${b.ime_lat}</p>
+                
+                <div class="flex flex-wrap gap-1.5 mt-2">
+                  <span class="px-2 py-0.5 rounded text-[9px] font-bold ${klimaCls}">${klimaLabel}</span>
+                  <span class="px-2 py-0.5 rounded text-[9px] font-bold ${tipCls}">${tipLabel}</span>
+                  ${sušaTag}
+                  ${solTag}
+                </div>
+              </div>
+              
+              <div class="border-t border-forest-100 dark:border-forest-800 pt-2.5 mt-2.5 flex justify-between items-center text-3xs font-semibold text-forest-500 dark:text-forest-400">
+                <span>Substrat: <strong class="text-forest-800 dark:text-white">${b.supstrat} cm</strong></span>
+                <span>Frostresistenz: <strong class="text-forest-800 dark:text-white">bis ${b.mraz}°C</strong></span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // --- INITIALIZE SYSTEM ON DOCUMENT READY ---
+    window.addEventListener('DOMContentLoaded', () => {
+      setRegion('mediteranska');
+      setRoofType('ekstenzivni');
+      focus3DLayer(1);
+      filterGlobalCatalog('all');
+    });
+  </script>
+</body>
+</html>

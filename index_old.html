@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeleni Krov Kalkulator — Preporuka biljaka za zelene krovove u Hrvatskoj</title>
+<meta name="description" content="Besplatan kalkulator za zeleni krov. Unesite lokaciju i površinu, dobijte personalizirani prijedlog biljaka i izračun troškova.">
+<!-- Open Graph / Social Media -->
+<meta property="og:title" content="Zeleni Krov Kalkulator | Izračunajte cijenu i materijal">
+<meta property="og:description" content="Projektirajte svoj zeleni krov. Odaberite regiju, nacrtajte površinu i saznajte točnu specifikaciju biljaka i materijala u nekoliko sekundi.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --zelena:    #2d6a4f;
+  --zelena-l:  #52b788;
+  --zelena-ll: #95d5b2;
+  --zelena-bg: #f0f7f4;
+  --pijesak:   #f5f0e8;
+  --smeđa:     #7a5c44;
+  --tamna:     #1b2e1b;
+  --muted:     #5a7869;
+  --bijela:    #fff;
+  --r:         14px;
+}
+
+html { scroll-behavior: smooth; background: var(--bijela); }
+body { 
+  font-family: 'Inter', sans-serif; 
+  color: var(--tamna); 
+  background: transparent; 
+  position: relative;
+}
+
+/* Background Pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('pattern.png');
+  background-size: 1000px;
+  background-repeat: repeat;
+  opacity: 0.07;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 16px 48px; display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,.97); box-shadow: 0 2px 20px rgba(0,0,0,.06);
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700;
+  color: var(--zelena); text-decoration: none; display: flex; align-items: center; gap: 10px;
+}
+.nav-logo i { font-size: 22px; }
+.nav-tag { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.nav-cta {
+  background: var(--zelena); color: #fff; padding: 9px 20px;
+  border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background .2s;
+}
+.nav-cta:hover { background: var(--zelena-l); }
+@media(max-width:640px){ nav { padding: 12px 18px; } .nav-tag { display: none; } }
+
+/* ── HERO ── */
+.hero {
+  padding: 180px 48px 120px;
+  background: linear-gradient(rgba(13, 43, 26, 0.7), rgba(13, 43, 26, 0.5)), url('hero2.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative; overflow: hidden; text-align: center;
+}
+.hero::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 150px;
+  background: linear-gradient(to top, var(--bijela), transparent);
+}
+.hero-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 32px;
+  background: rgba(255,255,255,0.1); color: #fff;
+  padding: 10px 24px; border-radius: 40px; font-size: 14px; font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif; font-size: clamp(40px,7vw,72px);
+  font-weight: 700; color: #fff; line-height: 1.05; margin-bottom: 24px;
+}
+.hero h1 span { color: var(--zelena-ll); position: relative; }
+.hero h1 span::after {
+  content: ''; position: absolute; bottom: 8px; left: 0; right: 0; height: 12px;
+  background: var(--zelena-l); opacity: 0.3; z-index: -1;
+}
+.hero p { font-size: clamp(16px,2.2vw,20px); color: rgba(255,255,255,0.85); line-height: 1.6; margin-bottom: 40px; max-width: 620px; margin-left: auto; margin-right: auto; }
+
+/* Hero stats */
+.hero-stats {
+  display: flex; gap: 50px; justify-content: center; margin-top: 60px;
+  flex-wrap: wrap;
+}
+.hero-stat { text-align: center; color: #fff; transition: transform 0.3s ease; }
+.hero-stat:hover { transform: translateY(-5px); }
+.hero-stat-num { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--zelena-ll); text-shadow: 0 0 20px rgba(149,213,178,0.3); }
+.hero-stat-lbl { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 6px; text-transform: uppercase; letter-spacing: .1em; font-weight: 600; }
+
+.hero-btns { display: flex; gap: 20px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--zelena-l); color: #fff; padding: 16px 36px;
+  border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(82, 183, 136, 0.3);
+}
+.btn-primary:hover { background: #40a070; transform: translateY(-3px); box-shadow: 0 15px 30px rgba(82, 183, 136, 0.4); }
+
+.btn-outline {
+  background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 16px 36px; border-radius: 12px; font-size: 16px; font-weight: 700;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+  backdrop-filter: blur(8px); transition: all 0.3s ease;
+}
+.btn-outline:hover { background: rgba(255, 255, 255, 0.2); border-color: #fff; transform: translateY(-3px); }
+
+/* ── KALKULATOR ── */
+#kalkulator {
+  max-width: 1200px; margin: 0 auto; padding: 72px 24px 80px;
+}
+.kalc-layout {
+  display: grid; grid-template-columns: 420px 1fr; gap: 40px; align-items: start;
+}
+@media(max-width:900px){ .kalc-layout { grid-template-columns: 1fr; } }
+
+/* Form panel */
+.kalc-form {
+  background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px);
+  border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.12); overflow: hidden;
+  position: sticky; top: 100px;
+}
+.kalc-form-header {
+  background: var(--zelena); padding: 22px 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.kalc-form-header i { font-size: 20px; color: var(--zelena-ll); }
+.kalc-form-header h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: #fff; }
+.kalc-form-header p { font-size: 13px; color: rgba(255,255,255,.7); margin-top: 2px; }
+
+.kalc-steps { padding: 28px; display: flex; flex-direction: column; gap: 28px; }
+
+.step-label {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--zelena); margin-bottom: 14px;
+}
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%; background: var(--zelena);
+  color: #fff; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* Region cards */
+.region-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.region-card {
+  border: 1px solid #e0ede6; border-radius: 16px; padding: 20px 16px;
+  text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #fff; position: relative; overflow: hidden;
+}
+.region-card::before {
+  content: ''; position: absolute; inset: 0; background: var(--zelena);
+  opacity: 0; transition: opacity 0.3s ease; z-index: 1;
+}
+.region-card:hover { transform: translateY(-3px); border-color: var(--zelena-l); box-shadow: 0 10px 20px rgba(45,106,79,0.05); }
+.region-card.active { border-color: var(--zelena); background: var(--zelena-bg); box-shadow: inset 0 0 0 1px var(--zelena); }
+.region-card.active .rc-title { color: var(--zelena); }
+.region-card .rc-icon { font-size: 32px; margin-bottom: 12px; display: block; position: relative; z-index: 2; }
+.region-card .rc-title { font-size: 14px; font-weight: 700; color: var(--tamna); position: relative; z-index: 2; transition: color 0.3s; }
+.region-card .rc-sub { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.4; position: relative; z-index: 2; }
+
+/* Area input */
+.area-group { display: flex; align-items: center; gap: 12px; }
+.area-input-wrap { position: relative; flex: 1; }
+.area-input-wrap input {
+  width: 100%; padding: 12px 48px 12px 14px; border: 2px solid #d8ead2;
+  border-radius: 10px; font-size: 22px; font-weight: 700; color: var(--zelena);
+  font-family: 'Inter', sans-serif; outline: none; transition: border-color .2s;
+}
+.area-input-wrap input:focus { border-color: var(--zelena); }
+.area-input-wrap .unit {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; font-weight: 600; color: var(--muted);
+}
+.area-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+/* Roof type cards */
+.roof-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.roof-card {
+  border: 2px solid #e0ede6; border-radius: 12px; padding: 16px 12px;
+  cursor: pointer; transition: all .2s; background: #fff;
+}
+.roof-card:hover { border-color: var(--zelena-l); background: var(--zelena-bg); }
+.roof-card.active { border-color: var(--zelena); background: var(--zelena-bg); }
+.roof-card .rc-icon { font-size: 28px; margin-bottom: 8px; }
+.roof-card .rc-title { font-size: 14px; font-weight: 700; color: var(--tamna); margin-bottom: 4px; }
+.roof-card .rc-sub { font-size: 11px; color: var(--muted); line-height: 1.5; }
+.roof-card .rc-badge {
+  display: inline-block; margin-top: 8px; padding: 2px 8px; border-radius: 12px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+}
+.roof-card[data-type="ekstenzivni"] .rc-badge { background: #e8f5e9; color: #2d6a4f; }
+.roof-card[data-type="intenzivni"] .rc-badge { background: #fdf3e7; color: #7a5c44; }
+
+/* Calc button */
+.kalc-btn {
+  width: 100%; background: var(--zelena); color: #fff; border: none;
+  padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 700;
+  font-family: 'Inter', sans-serif; cursor: pointer; transition: background .2s, transform .15s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.kalc-btn:hover { background: #1f4f38; transform: translateY(-1px); }
+.kalc-btn:disabled { background: #9ab; cursor: not-allowed; transform: none; }
+
+/* ── RESULTS ── */
+.kalc-results { min-height: 400px; }
+
+.results-empty {
+  background: var(--zelena-bg); border-radius: 16px;
+  padding: 60px 40px; text-align: center; color: var(--muted);
+  border: 2px dashed #b7d9c8;
+}
+.results-empty i { font-size: 48px; margin-bottom: 16px; opacity: .4; color: var(--zelena); }
+.results-empty p { font-size: 15px; line-height: 1.6; max-width: 320px; margin: 0 auto; }
+
+/* Region badge */
+.region-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
+  margin-bottom: 24px;
+}
+.region-badge.mediteranska { background: #e8f4fd; color: #1565a0; border: 1px solid #bddaf5; }
+.region-badge.kontinentalna { background: #f3ede8; color: #5a3e28; border: 1px solid #d9c4b0; }
+
+/* Results section titles */
+.res-section { margin-bottom: 32px; }
+.res-title {
+  font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700;
+  color: var(--tamna); margin-bottom: 6px;
+}
+.res-sub { font-size: 14px; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+
+/* Plant cards */
+.plant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:640px){ .plant-grid { grid-template-columns: 1fr; } }
+
+.plant-card {
+  background: #fff; border-radius: 20px; padding: 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  border: 1px solid #f0f7f4;
+  transition: all 0.3s ease;
+  display: flex; flex-direction: column; overflow: hidden;
+  animation: reveal 0.5s ease-out forwards;
+}
+@keyframes reveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.plant-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); border-color: var(--zelena-l); }
+
+.plant-img {
+  width: 100%; height: 160px; object-fit: cover;
+  background: #f0f7f4;
+}
+
+.plant-card-content { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
+.plant-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.plant-name { font-size: 17px; font-weight: 700; color: var(--tamna); line-height: 1.2; }
+.plant-lat { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 4px; }
+.plant-icon-badge { 
+  font-size: 24px; background: #fff; width: 44px; height: 44px; 
+  display: flex; align-items: center; justify-content: center; 
+  border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: absolute; top: 140px; right: 20px; z-index: 2;
+}
+.plant-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.plant-tag {
+  font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+.pt-green  { background: #e8f5e9; color: #2d6a4f; border: 1px solid rgba(45,106,79,0.1); }
+.pt-blue   { background: #e3f0ff; color: #1565a0; border: 1px solid rgba(21,101,160,0.1); }
+.pt-orange { background: #fff3e0; color: #8b5e3c; border: 1px solid rgba(139,94,60,0.1); }
+.plant-calc-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+  background: var(--zelena-bg); border-radius: 12px; padding: 12px;
+}
+.plant-calc-item { text-align: center; }
+.plant-calc-val { font-size: 14px; font-weight: 800; color: var(--zelena); }
+.plant-calc-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+.plant-note { font-size: 12px; color: var(--muted); line-height: 1.6; padding-top: 10px; border-top: 1px solid #f0f7f4; }
+
+/* Material calculator */
+.mat-calc {
+  background: #fff; border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,.08); overflow: hidden;
+}
+.mat-calc-header {
+  background: var(--zelena-bg); padding: 16px 22px;
+  border-bottom: 1px solid #d0e8d8;
+}
+.mat-calc-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--tamna); }
+.mat-calc-header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+.mat-rows { padding: 0 22px; }
+.mat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid #edf4f0;
+  font-size: 14px;
+}
+.mat-row:last-child { border-bottom: none; }
+.mat-row-left { display: flex; align-items: center; gap: 10px; }
+.mat-row-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.mat-row-name { font-weight: 600; color: var(--tamna); }
+.mat-row-detail { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.mat-row-price { font-size: 16px; font-weight: 700; color: var(--zelena); white-space: nowrap; }
+
+.mat-total {
+  background: linear-gradient(135deg, var(--zelena), #1a4731); padding: 24px 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-radius: 0 0 16px 16px;
+}
+.mat-total-lbl { font-size: 16px; font-weight: 600; color: rgba(255,255,255,.9); line-height: 1.4; }
+.mat-total-val { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+
+/* Savings box */
+.savings-box {
+  background: var(--zelena-bg); border-radius: 14px; padding: 20px 22px;
+  border: 1px solid #c0dfc8; margin-top: 14px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.savings-item { text-align: center; }
+.savings-val { font-size: 22px; font-weight: 700; color: var(--zelena); font-family: 'Playfair Display', serif; }
+.savings-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+/* CTA box */
+.cta-box {
+  background: linear-gradient(135deg, #1a4731 0%, var(--zelena) 100%);
+  border-radius: 16px; padding: 28px; text-align: center; margin-top: 24px;
+}
+.cta-box h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: #fff; margin-bottom: 8px; }
+.cta-box p { font-size: 14px; color: rgba(255,255,255,.75); margin-bottom: 20px; line-height: 1.6; }
+.cta-box .btn-primary { display: inline-flex; }
+
+/* ── LAYERS (HOW IT WORKS) ── */
+.layers-sec { background: var(--pijesak); padding: 72px 24px; }
+.layers-inner { max-width: 1000px; margin: 0 auto; }
+.sec-tag { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--zelena); margin-bottom: 10px; }
+.sec-title { font-family: 'Playfair Display', serif; font-size: clamp(26px,4vw,40px); font-weight: 700; color: var(--tamna); line-height: 1.2; margin-bottom: 12px; }
+.sec-sub { font-size: 16px; color: var(--muted); max-width: 520px; line-height: 1.6; }
+
+.layers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; align-items: center; }
+@media(max-width:768px){ .layers-grid { grid-template-columns: 1fr; } }
+
+.layer-stack { display: flex; flex-direction: column; gap: 6px; }
+.layer {
+  border-radius: 10px; padding: 14px 20px;
+  display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 14px;
+}
+.layer-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.l1 { background: #c8e6c9; color: #1b5e20; }   /* Vegetacija */
+.l2 { background: #a5d6a7; color: #2e7d32; }   /* Supstrat */
+.l3 { background: #ffe0b2; color: #7a5c44; }   /* Filc filter */
+.l4 { background: #ffcc80; color: #5d4037; }   /* Drenaža */
+.l5 { background: #b0bec5; color: #37474f; }   /* Hidroizolacija */
+.l6 { background: #90a4ae; color: #263238; }   /* Krov/AB ploča */
+.l1 .layer-num { background: #1b5e20; color: #fff; }
+.l2 .layer-num { background: #2e7d32; color: #fff; }
+.l3 .layer-num { background: #7a5c44; color: #fff; }
+.l4 .layer-num { background: #5d4037; color: #fff; }
+.l5 .layer-num { background: #37474f; color: #fff; }
+.l6 .layer-num { background: #263238; color: #fff; }
+
+.layer-sub { font-size: 12px; font-weight: 400; opacity: .75; margin-top: 2px; }
+
+.layer-info { display: flex; flex-direction: column; gap: 20px; }
+.info-item { display: flex; gap: 16px; }
+.info-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--zelena); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.info-title { font-size: 16px; font-weight: 700; color: var(--tamna); margin-bottom: 4px; }
+.info-sub { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+
+/* ── BAZA BILJAKA ── */
+.biljke-sec { padding: 80px 24px; background: var(--bijela); }
+.biljke-inner { max-width: 1200px; margin: 0 auto; }
+.biljke-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 24px; }
+
+.biljke-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+@media(max-width:640px){ .biljke-grid { grid-template-columns: repeat(2,1fr); gap:10px; } }
+
+.bk-card {
+  background: #fff; border-radius: 18px; overflow: hidden;
+  border: 1px solid #edf4f0; box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  transition: all .3s ease; display: flex; flex-direction: column;
+}
+.bk-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,.1); border-color: var(--zelena-l); }
+.bk-img { width: 100%; height: 140px; object-fit: cover; background: var(--zelena-bg); }
+.bk-body { padding: 14px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.bk-name { font-size: 14px; font-weight: 700; color: var(--tamna); line-height: 1.3; }
+.bk-lat  { font-size: 11px; color: var(--muted); font-style: italic; }
+.bk-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.bk-tag  { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.bk-klima-med  { background: #e8f4fd; color: #1565a0; }
+.bk-klima-kon  { background: #f3ede8; color: #5a3e28; }
+.bk-klima-oba  { background: #e8f5e9; color: #2d6a4f; }
+.bk-tip-ext    { background: #f0faf5; color: #2d6a4f; }
+.bk-tip-int    { background: #fdf3e7; color: #7a5c44; }
+.bk-tip-oba    { background: #f5f0e8; color: #7a5c44; }
+.bk-footer { padding: 10px 14px; border-top: 1px solid #f0f7f4; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); }
+.bk-mraz { font-weight: 600; }
+
+/* ── FOOTER ── */
+footer { background: var(--tamna); color: rgba(255,255,255,.55); text-align: center; padding: 28px 24px; font-size: 13px; line-height: 1.8; }
+footer strong { color: rgba(255,255,255,.85); }
+footer a { color: var(--zelena-ll); text-decoration: none; }
+
+/* ── MODE TABS ── */
+.mode-tabs { display:flex; gap:10px; margin-bottom:28px; }
+.mode-tab { flex:1; padding:13px 16px; border-radius:12px; border:2px solid #d0e8d8; cursor:pointer; text-align:center; font-weight:700; font-size:13px; background:#fff; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px; color:var(--muted); }
+.mode-tab:hover { border-color:var(--zelena-l); color:var(--zelena); }
+.mode-tab.active { border-color:var(--zelena); background:var(--zelena); color:#fff; }
+
+/* ── CUSTOM MODE ── */
+.custom-layout { display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start; }
+@media(max-width:960px){ .custom-layout { grid-template-columns:1fr; } }
+
+.custom-filter-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.custom-hint { font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.5; }
+
+.plant-pick-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+@media(max-width:640px){ .plant-pick-grid { grid-template-columns:repeat(2,1fr); } }
+
+.plant-pick-card { border:2px solid #e0ede6; border-radius:14px; overflow:hidden; cursor:pointer; transition:all .25s; background:#fff; position:relative; }
+.plant-pick-card:hover:not(.ppc-incompat) { border-color:var(--zelena-l); box-shadow:0 6px 16px rgba(45,106,79,.1); transform:translateY(-2px); }
+.plant-pick-card.ppc-selected { border-color:var(--zelena); background:var(--zelena-bg); }
+.plant-pick-card.ppc-incompat { opacity:.38; cursor:not-allowed; filter:grayscale(.5); }
+.ppc-img { width:100%; height:76px; object-fit:cover; background:var(--zelena-bg); }
+.ppc-body { padding:8px 10px 10px; }
+.ppc-name { font-size:12px; font-weight:700; color:var(--tamna); line-height:1.3; }
+.ppc-lat { font-size:10px; color:var(--muted); font-style:italic; margin-top:1px; }
+.ppc-meta { display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
+.ppc-tag { font-size:9px; font-weight:700; padding:2px 6px; border-radius:10px; text-transform:uppercase; letter-spacing:.04em; }
+.ppc-tag-incompat { font-size:9px; color:#c0392b; font-weight:600; margin-top:4px; line-height:1.4; }
+.ppc-check { position:absolute; top:7px; right:7px; width:22px; height:22px; border-radius:50%; background:var(--zelena); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; opacity:0; transition:opacity .2s; box-shadow:0 2px 6px rgba(0,0,0,.2); }
+.plant-pick-card.ppc-selected .ppc-check { opacity:1; }
+
+/* Custom summary panel */
+.custom-summary { background:#fff; border-radius:16px; border:1px solid #d0e8d8; overflow:hidden; position:sticky; top:100px; }
+.csm-header { background:var(--zelena); padding:14px 18px; }
+.csm-header h3 { font-family:'Playfair Display',serif; font-size:16px; color:#fff; margin-bottom:2px; }
+.csm-header p { font-size:12px; color:rgba(255,255,255,.75); }
+.csm-body { padding:16px; }
+.csm-empty { text-align:center; color:var(--muted); padding:24px 12px; font-size:13px; line-height:1.6; }
+.csm-row { display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid #f0f7f4; }
+.csm-row:last-child { border-bottom:none; }
+.csm-pct { font-size:11px; font-weight:800; color:var(--zelena); min-width:30px; }
+.csm-name { font-size:12px; font-weight:600; flex:1; color:var(--tamna); line-height:1.3; }
+.csm-kom { font-size:11px; color:var(--muted); white-space:nowrap; }
+.csm-warn { background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:10px 12px; margin-top:12px; font-size:11px; color:#5a4a1a; line-height:1.7; }
+.csm-warn strong { display:block; margin-bottom:3px; }
+.csm-total { background:var(--zelena-bg); border-radius:10px; padding:12px 14px; margin-top:12px; }
+.csm-total-val { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--zelena); }
+.csm-total-lbl { font-size:11px; color:var(--muted); margin-top:2px; line-height:1.4; }
+.btn-gen { width:100%; background:var(--zelena); color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; margin-top:12px; display:flex; align-items:center; justify-content:center; gap:8px; transition:background .2s; font-family:'Inter',sans-serif; }
+.btn-gen:hover:not(:disabled) { background:#1f4f38; }
+.btn-gen:disabled { background:#b0c4b8; cursor:not-allowed; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <i class="fas fa-leaf"></i>
+    <div>
+      <div>Zeleni Krov</div>
+      <div class="nav-tag">Kalkulator biljaka</div>
+    </div>
+  </a>
+  <a href="#kalkulator" class="nav-cta"><i class="fas fa-calculator"></i> Izračunaj</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><i class="fas fa-map-marker-alt"></i> Prilagođeno za Hrvatsku</div>
+    <h1>Zeleni krov koji<br><span>raste na vašoj lokaciji</span></h1>
+    <p>Unesite površinu krova, odaberite klimatsku zonu — dobijete popis biljaka, izračun materijala i okvirnu cijenu. Sve prilagođeno vašoj regiji u Hrvatskoj.</p>
+    <div class="hero-btns">
+      <a href="#kalkulator" class="btn-primary">
+        <i class="fas fa-calculator"></i>
+        Pokreni kalkulator
+      </a>
+      <a href="#slojevi" class="btn-outline">
+        <i class="fas fa-layer-group"></i>
+        Kako to radi?
+      </a>
+      <a href="#biljke" class="btn-outline">
+        <i class="fas fa-seedling"></i>
+        38 biljaka
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">38</div>
+        <div class="hero-stat-lbl">vrsta biljaka</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">2</div>
+        <div class="hero-stat-lbl">klimatske zone</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">3–5°C</div>
+        <div class="hero-stat-lbl">manja temperatura ljeti</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">40 god.</div>
+        <div class="hero-stat-lbl">vijek trajanja krova</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KALKULATOR -->
+<section id="kalkulator">
+  <div class="kalc-layout">
+
+    <!-- FORM -->
+    <div class="kalc-form">
+      <div class="kalc-form-header">
+        <i class="fas fa-sliders-h"></i>
+        <div>
+          <h2>Konfigurirajte krov</h2>
+          <p>3 koraka do preporuke</p>
+        </div>
+      </div>
+
+      <div class="kalc-steps">
+
+        <!-- STEP 1: Regija -->
+        <div>
+          <div class="step-label"><span class="step-num">1</span> Vaša lokacija / klimatska zona</div>
+          <div class="region-cards">
+            <div class="region-card" data-region="mediteranska" onclick="selectRegion('mediteranska')">
+              <div class="rc-icon">🌊</div>
+              <div class="rc-title">Mediteran</div>
+              <div class="rc-sub">Dalmacija, Istra, Primorje</div>
+            </div>
+            <div class="region-card" data-region="kontinentalna" onclick="selectRegion('kontinentalna')">
+              <div class="rc-icon">🌾</div>
+              <div class="rc-title">Kontinentalna</div>
+              <div class="rc-sub">Zagreb, Slavonija, Zagorje</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Površina -->
+        <div>
+          <div class="step-label"><span class="step-num">2</span> Površina krova</div>
+          <div class="area-input-wrap">
+            <input type="number" id="area" min="1" max="10000" placeholder="npr. 40" oninput="validateForm()">
+            <span class="unit">m²</span>
+          </div>
+          <div class="area-hint"><i class="fas fa-info-circle"></i> Izmjerite vanjsku površinu. Npr. 8m × 6m = 48 m²</div>
+        </div>
+
+        <!-- STEP 3: Tip krova -->
+        <div>
+          <div class="step-label"><span class="step-num">3</span> Tip zelenog krova</div>
+          <div class="roof-cards">
+            <div class="roof-card" data-type="ekstenzivni" onclick="selectRoof('ekstenzivni')">
+              <div class="rc-icon">🌿</div>
+              <div class="rc-title">Ekstenzivni</div>
+              <div class="rc-sub">Tanak supstrat (6–15 cm), minimalno održavanje, sedum i trave</div>
+              <div class="rc-badge">Popularno</div>
+            </div>
+            <div class="roof-card" data-type="intenzivni" onclick="selectRoof('intenzivni')">
+              <div class="rc-icon">🌳</div>
+              <div class="rc-title">Intenzivni</div>
+              <div class="rc-sub">Debeli supstrat (20+ cm), grmlje i trajnice, krovni vrt</div>
+              <div class="rc-badge">Više opcija</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="kalc-btn" id="calcBtn" onclick="calculate()" disabled>
+          <i class="fas fa-leaf"></i> Prikaži preporuke
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="kalc-results" id="results">
+      <div class="results-empty">
+        <i class="fas fa-leaf"></i>
+        <p>Ispunite podatke lijevo i kliknite <strong>"Prikaži preporuke"</strong> za personaliziranu preporuku biljaka i izračun troškova.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BAZA BILJAKA -->
+<section class="biljke-sec" id="biljke">
+  <div class="biljke-inner">
+    <div class="sec-tag">Katalog vegetacije</div>
+    <h2 class="sec-title">Sve biljke za zeleni krov</h2>
+    <p class="sec-sub">38 vrsta testiranih i prilagođenih za zelene krovove u Hrvatskoj — filtriraj po tipu, klimi ili karakteristikama.</p>
+    <div class="biljke-filters" id="biljkeFilters"></div>
+    <div class="biljke-grid" id="biljkeGrid"></div>
+  </div>
+</section>
+
+<!-- SLOJEVI / HOW IT WORKS -->
+<section class="layers-sec" id="slojevi">
+  <div class="layers-inner">
+    <div class="sec-tag">Konstrukcija</div>
+    <h2 class="sec-title">Kako je zeleni krov izgrađen?</h2>
+    <p class="sec-sub">Zeleni krov nije samo zemlja i biljke — radi se o sustavu slojeva koji štiti krov i hrani vegetaciju.</p>
+
+    <div class="layers-grid">
+      <div class="layer-stack">
+        <div class="layer l1"><span class="layer-num">1</span><div><div>Vegetacija — biljke</div><div class="layer-sub">Sedum, trave, trajnice</div></div></div>
+        <div class="layer l2"><span class="layer-num">2</span><div><div>Supstrat — rastući medij</div><div class="layer-sub">6–25 cm, lagana mješavina pumice i komposta</div></div></div>
+        <div class="layer l3"><span class="layer-num">3</span><div><div>Filc filter</div><div class="layer-sub">Sprječava ispiranje supstrata</div></div></div>
+        <div class="layer l4"><span class="layer-num">4</span><div><div>Drenaža</div><div class="layer-sub">Plastična ploča, odvodi višak vode</div></div></div>
+        <div class="layer l5"><span class="layer-num">5</span><div><div>Hidroizolacija</div><div class="layer-sub">Zaštita konstrukcije krova</div></div></div>
+        <div class="layer l6"><span class="layer-num">6</span><div><div>AB ploča / krovni nosač</div><div class="layer-sub">Vaša postojeća konstrukcija</div></div></div>
+      </div>
+
+      <div class="layer-info">
+        <div class="info-item">
+          <div class="info-icon"><i class="fas fa-weight-hanging"></i></div>
+          <div>
+            <div class="info-title">Provjera statike — obavezna</div>
+            <div class="info-sub">Ekstenzivni zeleni krov nosi 80–150 kg/m² (mokro). Intenzivni i do 400 kg/m². Svaka ugradnja mora uključivati izračun konstruktora.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon"><i class="fas fa-tint"></i></div>
+          <div>
+            <div class="info-title">Navodnjavanje</div>
+            <div class="info-sub">Ekstenzivni krovovi u Dalmaciji ne trebaju navodnjavanje nakon ukorjenjivanja (6–12 mj.). Intenzivni zahtijevaju kapljično navodnjavanje.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon"><i class="fas fa-euro-sign"></i></div>
+          <div>
+            <div class="info-title">EU subvencije dostupne</div>
+            <div class="info-sub">Zeleni krovovi su prihvatljivi troškovi u EU programima za energetsku obnovu (fond NPOO) i urbanoj regeneraciji. Moguća pokrivenost do 40%.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon"><i class="fas fa-thermometer-half"></i></div>
+          <div>
+            <div class="info-title">Ušteda energije</div>
+            <div class="info-sub">Zeleni krov smanjuje temperaturu na krovnoj ploči za 20–40°C ljeti, što znači 15–25% manji trošak klimatizacije.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Zeleni Krov Kalkulator</strong> &nbsp;·&nbsp; Baza podataka: 38 vrsta biljaka prilagođenih hrvatskoj klimi<br>
+  Napravljeno uz podršku <a href="#">Sharp Shark Digital</a> &nbsp;·&nbsp; Podatkovni izvori: PMC hortikulturne studije, Bauder HR, Rasadnik Latića
+</footer>
+
+<script>
+// ─── BAZA BILJAKA ─────────────────────────────────────────────────────────────
+const BILJKE = [
+  { id:1,  img:"images/1.jpg",  ime_hr:"Živi kamen",        ime_lat:"Sedum acre",              tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-30, pm2:16, cijena:0.93, supstrat:"4–8",  tip_biljke:"sedum",   boja:"🟢", odrzavanje:"Gotovo bez održavanja; žuti cvijetovi lipnja–srpnja." },
+  { id:2,  img:"images/2.jpg",  ime_hr:"Bijeli žednjak",    ime_lat:"Sedum album",             tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-30, pm2:16, cijena:2.00, supstrat:"4–10", tip_biljke:"sedum",   boja:"🟢", odrzavanje:"Pionirska vrsta; bijeli cvijetovi ljeti." },
+  { id:3,  img:"images/3.jpg",  ime_hr:"Modrikasti žednjak",ime_lat:"Sedum rupestre",          tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-35, pm2:16, cijena:0.93, supstrat:"4–10", tip_biljke:"sedum",   boja:"🟢", odrzavanje:"Podnosi vjetar; idealno za nagnute plohe." },
+  { id:4,  img:"images/4.jpg",  ime_hr:"Hispanijski žednjak",ime_lat:"Sedum hispanicum",       tip_krova:"ekstenzivni", klima:"mediteranska",   sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-20, pm2:20, cijena:1.50, supstrat:"5–10", tip_biljke:"sedum",   boja:"🟢", odrzavanje:"Sitni bijelo-ružičasti cvijetovi; odlično za priobalne krovove." },
+  { id:5,  img:"images/5.jpg",  ime_hr:"Kavkaski žednjak",  ime_lat:"Phedimus spurius",        tip_krova:"ekstenzivni", klima:"kontinentalna",  sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-35, pm2:16, cijena:1.50, supstrat:"6–12", tip_biljke:"sedum",   boja:"🟢", odrzavanje:"Roza–crveni cvijetovi u srpnju; za kontinentalnu klimu." },
+  { id:6,  img:"images/6.jpg",  ime_hr:"Kamčatski žednjak", ime_lat:"Sedum kamtschaticum",     tip_krova:"ekstenzivni", klima:"kontinentalna",  sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:false, mraz:-40, pm2:12, cijena:2.00, supstrat:"6–12", tip_biljke:"sedum",   boja:"🟢", odrzavanje:"Najotporniji sedum na mraz; zlatno-žuti cvijetovi." },
+  { id:7,  img:"images/7.jpg",  ime_hr:"Mediteranski žednjak",ime_lat:"Sedum sediforme",       tip_krova:"ekstenzivni", klima:"mediteranska",   sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-12, pm2:12, cijena:2.00, supstrat:"5–15", tip_biljke:"sedum",   boja:"🟢", odrzavanje:"Izvrsna performansa na mediteranskim krovovima." },
+  { id:8,  img:"images/8.jpg",  ime_hr:"Jesenski žednjak",  ime_lat:"Hylotelephium spectabile",tip_krova:"oba",         klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-20, pm2:9,  cijena:3.50, supstrat:"12–20",tip_biljke:"sedum",   boja:"🟢", odrzavanje:"Ružičasti cvijetovi kolovoz–rujan; privlači pčele." },
+  { id:9,  img:"images/9.jpg",  ime_hr:"Čuvarkuća",         ime_lat:"Sempervivum tectorum",    tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-25, pm2:20, cijena:2.00, supstrat:"4–8",  tip_biljke:"cuvarkuca",boja:"🔵", odrzavanje:"Stoljetna biljka krovova; razmnožava se rozetama." },
+  { id:10, img:"images/10.jpg", ime_hr:"Paučinasta čuvarkuća",ime_lat:"Sempervivum arachnoideum",tip_krova:"ekstenzivni",klima:"oboje",        sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-25, pm2:25, cijena:1.50, supstrat:"4–8",  tip_biljke:"cuvarkuca",boja:"🔵", odrzavanje:"Dekorativne bijele niti; za krajnje plitke supstrate." },
+  { id:11, img:"images/11.jpg", ime_hr:"Hardy ledena biljka",ime_lat:"Delosperma cooperi",     tip_krova:"ekstenzivni", klima:"mediteranska",   sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-18, pm2:9,  cijena:3.00, supstrat:"6–14", tip_biljke:"cuvarkuca",boja:"🔵", odrzavanje:"Vatreno-ružičasti cvijetovi cijelo ljeto." },
+  { id:12, img:"images/12.jpg", ime_hr:"Majčina dušica",    ime_lat:"Thymus serpyllum",        tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-30, pm2:12, cijena:1.59, supstrat:"6–12", tip_biljke:"bilje",   boja:"🟣", odrzavanje:"Aromatična prostirka; ljubičasti cvijetovi privlače pčele." },
+  { id:13, img:"images/13.jpg", ime_hr:"Timijan",           ime_lat:"Thymus vulgaris",         tip_krova:"oba",         klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-20, pm2:9,  cijena:2.00, supstrat:"8–15", tip_biljke:"bilje",   boja:"🟣", odrzavanje:"Kulinarsko-dekorativno; lagano rezanje godišnje." },
+  { id:14, img:"images/14.jpg", ime_hr:"Lavanda",           ime_lat:"Lavandula angustifolia",  tip_krova:"intenzivni",  klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-20, pm2:4,  cijena:3.50, supstrat:"20–30",tip_biljke:"bilje",   boja:"🟣", odrzavanje:"Rezanje na 1/3 visine odmah nakon cvatnje." },
+  { id:15, img:"images/15.jpg", ime_hr:"Ružmarin",          ime_lat:"Salvia rosmarinus",       tip_krova:"intenzivni",  klima:"mediteranska",   sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-12, pm2:2,  cijena:3.00, supstrat:"20–35",tip_biljke:"bilje",   boja:"🟣", odrzavanje:"Rezanje 1–2× godišnje; idealno za Dalmaciju i Istru." },
+  { id:16, img:"images/16.jpg", ime_hr:"Kadulja",           ime_lat:"Salvia officinalis",      tip_krova:"oba",         klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-20, pm2:4,  cijena:2.50, supstrat:"12–20",tip_biljke:"bilje",   boja:"🟣", odrzavanje:"Kulinarsko i dekorativno; ljubičasti cvijetovi privlače oprašivače." },
+  { id:17, img:"images/17.jpg", ime_hr:"Smilje",            ime_lat:"Helichrysum italicum",    tip_krova:"oba",         klima:"mediteranska",   sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-10, pm2:4,  cijena:3.50, supstrat:"10–20",tip_biljke:"bilje",   boja:"🟣", odrzavanje:"Srebrno-sivo lišće; zlatnožuti cvijetovi; dalmatinska autohtona biljka." },
+  { id:18, img:"images/18.jpg", ime_hr:"Origano",           ime_lat:"Origanum vulgare",        tip_krova:"oba",         klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-25, pm2:9,  cijena:2.00, supstrat:"8–15", tip_biljke:"bilje",   boja:"🟣", odrzavanje:"Samosjemeno; rezanje na ½ visine u proljeće." },
+  { id:19, img:"images/19.jpg", ime_hr:"Morski kopar",      ime_lat:"Crithmum maritimum",      tip_krova:"ekstenzivni", klima:"mediteranska",   sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-8,  pm2:6,  cijena:4.00, supstrat:"7–15", tip_biljke:"bilje",   boja:"🟣", odrzavanje:"Dalmatinska biljka s iznimnom sol-tolerancijom." },
+  { id:20, img:"images/20.jpg", ime_hr:"Morska lavanda",    ime_lat:"Limonium virgatum",       tip_krova:"ekstenzivni", klima:"mediteranska",   sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-10, pm2:6,  cijena:4.00, supstrat:"10–15",tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Prirodna obalska biljka Jadrana; minimalno održavanje." },
+  { id:21, img:"images/21.jpg", ime_hr:"Brazatka",          ime_lat:"Armeria maritima",        tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:true,  mraz:-30, pm2:12, cijena:4.00, supstrat:"8–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Ružičasti pomponi travanj–listopad; idealna za prioblje." },
+  { id:22, img:"images/22.jpg", ime_hr:"Kartuzijanski karanfil",ime_lat:"Dianthus carthusianorum",tip_krova:"ekstenzivni",klima:"oboje",        sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:false, mraz:-35, pm2:9,  cijena:2.50, supstrat:"10–15",tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Crveno-ružičasti cvijetovi; povećava bioraznolikost krova." },
+  { id:23, img:"images/23.jpg", ime_hr:"Plava vlasulja",    ime_lat:"Festuca glauca",          tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:true,  mraz:-30, pm2:9,  cijena:3.00, supstrat:"8–15", tip_biljke:"trava",   boja:"🟡", odrzavanje:"Plavo-siva dekorativna trava; ne širi se." },
+  { id:24, img:"images/24.jpg", ime_hr:"Ovčja vlasulja",    ime_lat:"Festuca ovina",           tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:true,  mraz:-30, pm2:9,  cijena:2.50, supstrat:"8–15", tip_biljke:"trava",   boja:"🟡", odrzavanje:"Tanka trava u jastucima; dobra u kombinaciji sa sedumima." },
+  { id:25, img:"images/25.jpg", ime_hr:"Hajdučka trava",    ime_lat:"Achillea millefolium",    tip_krova:"oba",         klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:false, mraz:-35, pm2:9,  cijena:2.50, supstrat:"10–15",tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Bijeli cvijetovi; sprječava korov; samosjemeno." },
+  { id:26, img:"images/26.jpg", ime_hr:"Patuljasta perunika",ime_lat:"Iris pumila",            tip_krova:"oba",         klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:false, mraz:-30, pm2:9,  cijena:3.50, supstrat:"10–15",tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Najniža perunika (15–20 cm); ljubičasti cvijetovi u travnju." },
+  { id:27, img:"images/27.jpg", ime_hr:"Jagnjeće uši",      ime_lat:"Stachys byzantina",       tip_krova:"oba",         klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-25, pm2:9,  cijena:3.00, supstrat:"10–15",tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Srebrno-sivo baršunasto lišće; dekorativno cijelu godinu." },
+  { id:28, img:"images/28.jpg", ime_hr:"Proljetni petoprst",ime_lat:"Potentilla neumanniana",  tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-30, pm2:12, cijena:3.00, supstrat:"8–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Žuti cvijetovi u proljeće; niska prostirka 5–10 cm." },
+  { id:29, img:"images/29.jpg", ime_hr:"Kamenjarka",        ime_lat:"Saxifraga paniculata",    tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-30, pm2:16, cijena:2.00, supstrat:"6–12", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Rozeta-biljka sa stjenovitih staništa; bijeli cvijetovi u lipnju." },
+  { id:30, img:"images/30.jpg", ime_hr:"Ukrasna kadulja",   ime_lat:"Salvia nemorosa",         tip_krova:"oba",         klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:false, mraz:-30, pm2:6,  cijena:3.00, supstrat:"10–15",tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Plavo-ljubičasta cvatnja u lipnju; privlači leptire." },
+  { id:31, img:"images/31.jpg", ime_hr:"Aubriecija",        ime_lat:"Aubrieta deltoidea",      tip_krova:"ekstenzivni", klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:12, cijena:3.00, supstrat:"8–12", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Bogata proljetna cvatnja; porijeklom s balkanskih litica." },
+  { id:32, img:"images/32.jpg", ime_hr:"Puzajuća drijenjača",ime_lat:"Cotoneaster dammeri",   tip_krova:"intenzivni",  klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:2,  cijena:3.30, supstrat:"20–30",tip_biljke:"grmlje",  boja:"🟤", odrzavanje:"Puzajuće; crvene bobice u jesen; zimzelena." },
+  { id:33, img:"images/33.jpg", ime_hr:"Horizontalni kotoneaster",ime_lat:"Cotoneaster horizontalis",tip_krova:"intenzivni",klima:"oboje",     sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:1,  cijena:5.00, supstrat:"25–40",tip_biljke:"grmlje",  boja:"🟤", odrzavanje:"Crvene bobice cijelu zimu; za veće površine." },
+  { id:34, img:"images/34.jpg", ime_hr:"Japanska spireja",  ime_lat:"Spiraea japonica",        tip_krova:"intenzivni",  klima:"kontinentalna",  sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:1,  cijena:5.00, supstrat:"25–40",tip_biljke:"grmlje",  boja:"🟤", odrzavanje:"Kompaktni grm; ružičasti cvijetovi lipanj–srpanj." },
+  { id:35, img:"images/35.jpg", ime_hr:"Vrijesak / Erika",  ime_lat:"Calluna vulgaris",        tip_krova:"oba",         klima:"kontinentalna",  sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:4,  cijena:4.00, supstrat:"15–25",tip_biljke:"grmlje",  boja:"🟤", odrzavanje:"Zahtijeva kiseli supstrat (pH 4.5–5.5); cvatnja srpanj–listopad." },
+  { id:36, img:"images/36.jpg", ime_hr:"Cistus",            ime_lat:"Cistus salviifolius",     tip_krova:"intenzivni",  klima:"mediteranska",   sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-12, pm2:1,  cijena:5.00, supstrat:"20–35",tip_biljke:"grmlje",  boja:"🟤", odrzavanje:"Dalmatinska autohtona biljka; bijeli cvijetovi u proljeće." },
+  { id:37, img:"images/37.jpg", ime_hr:"Mediteranska trava",ime_lat:"Brachypodium phoenicoides",tip_krova:"oba",        klima:"mediteranska",   sunce:"puno sunce", otpornost_na_sušu:"visoka",  tolerancija_sol:true,  mraz:-15, pm2:6,  cijena:3.00, supstrat:"12–20",tip_biljke:"trava",   boja:"🟡", odrzavanje:"Mediteranska trava; dekorativna smeđa boja u jesen." },
+  { id:38, img:"images/38.jpg", ime_hr:"Vlasac",            ime_lat:"Allium schoenoprasum",    tip_krova:"oba",         klima:"oboje",          sunce:"puno sunce", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-30, pm2:12, cijena:2.00, supstrat:"10–15",tip_biljke:"bilje",   boja:"🟣", odrzavanje:"Kulinarsko i dekorativno; ružičasti cvijetovi u svibnju." }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let state = { region: null, area: null, roofType: null };
+
+// ─── UI SELECTORS ─────────────────────────────────────────────────────────────
+function selectRegion(r) {
+  state.region = r;
+  document.querySelectorAll('.region-card').forEach(c => c.classList.toggle('active', c.dataset.region === r));
+  validateForm();
+}
+
+function selectRoof(t) {
+  state.roofType = t;
+  document.querySelectorAll('.roof-card').forEach(c => c.classList.toggle('active', c.dataset.type === t));
+  validateForm();
+}
+
+function validateForm() {
+  state.area = parseFloat(document.getElementById('area').value) || null;
+  const ok = state.region && state.area && state.area > 0 && state.roofType;
+  document.getElementById('calcBtn').disabled = !ok;
+}
+
+// ─── GLAVNA LOGIKA ────────────────────────────────────────────────────────────
+function calculate() {
+  state.area = parseFloat(document.getElementById('area').value);
+
+  // 1. Filtriraj biljke
+  const filtered = BILJKE.filter(b => {
+    const klimaOk = b.klima === state.region || b.klima === 'oboje';
+    const tipOk   = b.tip_krova === state.roofType || b.tip_krova === 'oba';
+    return klimaOk && tipOk;
+  });
+
+  // Sortiraj: visoka otpornost na sušu, sol tolerancija za mediteran
+  filtered.sort((a, b) => {
+    let sa = (a.otpornost_na_sušu === 'visoka' ? 2 : 1) + (a.tolerancija_sol && state.region === 'mediteranska' ? 1 : 0);
+    let sb = (b.otpornost_na_sušu === 'visoka' ? 2 : 1) + (b.tolerancija_sol && state.region === 'mediteranska' ? 1 : 0);
+    return sb - sa;
+  });
+
+  // Uzmi top 6 (mix tipova)
+  const plants = pickMix(filtered, 6);
+
+  // 2. Izračunaj materijale
+  const materials = calcMaterials(plants);
+
+  // 3. Prikaži
+  renderResults(plants, materials);
+}
+
+function pickMix(filtered, n) {
+  // Uzmi po jedan iz svake grupe, do n ukupno
+  const groups = {};
+  filtered.forEach(b => {
+    if (!groups[b.tip_biljke]) groups[b.tip_biljke] = [];
+    groups[b.tip_biljke].push(b);
+  });
+
+  const result = [];
+  const groupOrder = ['sedum', 'cuvarkuca', 'bilje', 'cvijece', 'trava', 'grmlje'];
+
+  // Prvo jedan od svakog tipa
+  groupOrder.forEach(g => {
+    if (groups[g] && groups[g].length) result.push(groups[g][0]);
+  });
+
+  // Dopuni do n iz sortiranih filtriranih
+  filtered.forEach(b => {
+    if (result.length >= n) return;
+    if (!result.find(r => r.id === b.id)) result.push(b);
+  });
+
+  return result.slice(0, n);
+}
+
+function calcMaterials(plants) {
+  const area = state.area;
+  const isExt = state.roofType === 'ekstenzivni';
+
+  // Supstrat
+  const depthM      = isExt ? 0.10 : 0.25;
+  const supstrat_m3 = +(area * depthM * 1.3).toFixed(1);
+  const supstrat_eur = +(supstrat_m3 * 80).toFixed(2);
+
+  // Drenaža + filc (zajedno)
+  const drenaža_eur = +(area * (isExt ? 8 : 12)).toFixed(2);
+
+  // Sadnice — primarni miks (top 3 biljke, raspodijeli površinu)
+  const mix = plants.slice(0, 3);
+  const udjeli = [0.5, 0.3, 0.2]; // 50% / 30% / 20%
+  let sadnice_eur = 0;
+  let sadnice_breakdown = [];
+
+  mix.forEach((b, i) => {
+    const površina_b = area * udjeli[i];
+    const kom        = Math.ceil(površina_b * b.pm2);
+    const eur        = +(kom * b.cijena).toFixed(2);
+    sadnice_eur += eur;
+    sadnice_breakdown.push({ biljka: b, kom, eur, površina: +površina_b.toFixed(1) });
+  });
+  sadnice_eur = +sadnice_eur.toFixed(2);
+
+  const total = supstrat_eur + drenaža_eur + sadnice_eur;
+
+  // Uštede / ekološki podaci
+  const co2_god  = +(area * (isExt ? 1.5 : 3.0)).toFixed(0); // kg/god
+  const ušteda_god = +(area * (isExt ? 2.5 : 4.0)).toFixed(0); // EUR/god
+
+  const cijena_po_m2 = +(total / area).toFixed(2);
+
+  return { supstrat_m3, supstrat_eur, drenaža_eur, sadnice_eur, sadnice_breakdown, total, cijena_po_m2, co2_god, ušteda_god };
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function renderResults(plants, mat) {
+  const reg = state.region;
+  const regLabel = reg === 'mediteranska'
+    ? '<div class="region-badge mediteranska">🌊 Mediteranska klima — Dalmacija / Istra / Primorje</div>'
+    : '<div class="region-badge kontinentalna">🌾 Kontinentalna klima — Zagreb / Slavonija / Zagorje</div>';
+
+  const roofLabel = state.roofType === 'ekstenzivni' ? 'Ekstenzivni zeleni krov' : 'Intenzivni zeleni krov';
+
+  const plantCards = plants.map((b, i) => renderPlantCard(b, i)).join('');
+
+  const sadBreakdown = mat.sadnice_breakdown.map(s =>
+    `<div class="mat-row">
+      <div class="mat-row-left">
+        <div class="mat-row-icon" style="background:${tipColor(s.biljka.tip_biljke)}">${tipEmoji(s.biljka.tip_biljke)}</div>
+        <div>
+          <div class="mat-row-name">${s.biljka.ime_hr} <span style="font-weight:400;color:var(--muted)">(${s.kom} kom)</span></div>
+          <div class="mat-row-detail">${s.površina} m² × ${s.biljka.pm2} kom/m² × ${s.biljka.cijena.toFixed(2)} €</div>
+        </div>
+      </div>
+      <div class="mat-row-price">${s.eur.toFixed(2)} €</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('results').innerHTML = `
+    <div class="mode-tabs">
+      <div class="mode-tab active" id="tabAuto" onclick="switchTab('auto')"><i class="fas fa-robot"></i> Preporučeni miks</div>
+      <div class="mode-tab" id="tabCustom" onclick="switchTab('custom')"><i class="fas fa-seedling"></i> Kreiraj sam</div>
+    </div>
+    <div id="autoContent">
+    ${regLabel}
+
+    <div class="res-section">
+      <div class="res-title">Preporučene biljke za vaš krov</div>
+      <div class="res-sub">${plants.length} vrsta odabranih za ${roofLabel.toLowerCase()} u ${reg === 'mediteranska' ? 'mediteranskoj klimi' : 'kontinentalnoj klimi'} — površina ${state.area} m²</div>
+      <div class="plant-grid">${plantCards}</div>
+    </div>
+
+    <div class="res-section">
+      <div class="res-title">Kalkulator materijala</div>
+      <div class="res-sub">Okvirni izračun za ${state.area} m² — ${state.roofType === 'ekstenzivni' ? 'supstrat ~10 cm' : 'supstrat ~25 cm'}. Cijene su tržišne za HR 2025.</div>
+      <div class="mat-calc">
+        <div class="mat-calc-header">
+          <h3>Pregled troškova</h3>
+          <p>Biljke su raspodijeljene u miks — 50% / 30% / 20%</p>
+        </div>
+        <div class="mat-rows">
+          <div class="mat-row">
+            <div class="mat-row-left">
+              <div class="mat-row-icon" style="background:#e8f5e9">🪨</div>
+              <div>
+                <div class="mat-row-name">Supstrat (rastući medij)</div>
+                <div class="mat-row-detail">${mat.supstrat_m3} m³ × 15 €/m³ (${state.area} m² × ${state.roofType === 'ekstenzivni' ? '10' : '25'} cm × 1.3 faktor)</div>
+              </div>
+            </div>
+            <div class="mat-row-price">${mat.supstrat_eur.toFixed(2)} €</div>
+          </div>
+          <div class="mat-row">
+            <div class="mat-row-left">
+              <div class="mat-row-icon" style="background:#fff3e0">💧</div>
+              <div>
+                <div class="mat-row-name">Drenaža + filc filter</div>
+                <div class="mat-row-detail">${state.area} m² × ${state.roofType === 'ekstenzivni' ? '8' : '12'} €/m²</div>
+              </div>
+            </div>
+            <div class="mat-row-price">${mat.drenaža_eur.toFixed(2)} €</div>
+          </div>
+          ${sadBreakdown}
+        </div>
+        <div class="mat-total">
+          <div class="mat-total-lbl">Cijena paketa po m²<br><span style="font-size:12px;font-weight:400;opacity:0.8">Informativni izračun (materijal + biljke)</span></div>
+          <div style="text-align: right;">
+            <div class="mat-total-val">${mat.cijena_po_m2.toFixed(2)} € <span style="font-size:16px; font-weight: 500;">/ m²</span></div>
+            <div style="font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 4px;">Ukupno: ${mat.total.toFixed(2)} €</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="savings-box">
+        <div class="savings-item">
+          <div class="savings-val">~${mat.ušteda_god} €</div>
+          <div class="savings-lbl">godišnja ušteda na energiji (manje hlađenje)</div>
+        </div>
+        <div class="savings-item">
+          <div class="savings-val">${mat.co2_god} kg</div>
+          <div class="savings-lbl">CO₂ sekvestracija godišnje</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;background:#fff8e1;border:1px solid #ffe082;border-radius:12px;padding:16px 18px;display:flex;gap:12px;align-items:flex-start">
+        <i class="fas fa-triangle-exclamation" style="color:#f59e0b;font-size:18px;margin-top:2px;flex-shrink:0"></i>
+        <div style="font-size:12px;color:#5a4a1a;line-height:1.7">
+          <strong style="display:block;margin-bottom:4px;font-size:13px">Što nije uključeno u ovaj izračun:</strong>
+          <strong>Hidroizolacija</strong> — obavezna za svaki zeleni krov, cijena ovisi o stanju podloge i odabranom sustavu (1–3 sloja; TPO, bitumen, PU). Tipično <strong>15–40 €/m²</strong> samo za materijal.<br>
+          <strong>Ugradnja</strong> — cijena radne snage varira, orijentacijski <strong>20–50 €/m²</strong> za kompletan sustav.<br>
+          <strong>Statički proračun</strong> — obavezan prije ugradnje; zeleni krov nosi 80–400 kg/m².
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <h3>Trebate pomoć u realizaciji?</h3>
+      <p>Naši partneri rasadnici i izvođači radova mogu vam dati konkretnu ponudu za vaš krov. Upit je besplatan.</p>
+      <a href="mailto:" class="btn-primary"><i class="fas fa-envelope"></i> Zatražite ponudu</a>
+    </div>
+    </div>
+    <div id="customContent" style="display:none"></div>
+  `;
+
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderPlantCard(b, idx, customUdjelF) {
+  const suša = b.otpornost_na_sušu === 'visoka' ? '<span class="plant-tag pt-green">Suša otporna</span>' : '';
+  const sol  = b.tolerancija_sol ? '<span class="plant-tag pt-blue">Sol tolerantna</span>' : '';
+  const mraz = b.mraz <= -25 ? '<span class="plant-tag pt-orange">Mraz do ' + b.mraz + '°C</span>' : '';
+
+  // Custom mode: svi udjeli su jednaki (customUdjelF). Auto mode: 50/30/20 za top 3.
+  const autoUdjeli = [0.5, 0.3, 0.2];
+  const udjelF = customUdjelF !== undefined
+    ? customUdjelF
+    : (idx !== undefined && idx < 3 ? autoUdjeli[idx] : null);
+  const površina = udjelF ? state.area * udjelF : state.area;
+  const kom = Math.ceil(površina * b.pm2);
+  const eur = (kom * b.cijena).toFixed(0);
+  const mixLabel = udjelF
+    ? `<div style="font-size:10px;color:var(--zelena);font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">${Math.round(udjelF*100)}% površine · ${površina.toFixed(0)} m²</div>`
+    : `<div style="font-size:10px;color:var(--muted);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Dopunska preporuka</div>`;
+
+  const imgSrc = b.img || 'sedum.png';
+
+  return `
+    <div class="plant-card tip-${b.tip_biljke}">
+      <img src="${imgSrc}" class="plant-img" alt="${b.ime_hr}" loading="lazy" onerror="this.src='sedum.png'">
+      <div class="plant-icon-badge">${b.boja}</div>
+      <div class="plant-card-content">
+        <div class="plant-card-top">
+          <div>
+            <div class="plant-name">${b.ime_hr}</div>
+            <div class="plant-lat">${b.ime_lat}</div>
+          </div>
+        </div>
+        ${mixLabel}
+        <div class="plant-tags">${suša}${sol}${mraz}</div>
+        <div class="plant-calc-row">
+          <div class="plant-calc-item">
+            <div class="plant-calc-val">${b.pm2}</div>
+            <div class="plant-calc-lbl">kom/m²</div>
+          </div>
+          <div class="plant-calc-item">
+            <div class="plant-calc-val">${kom}</div>
+            <div class="plant-calc-lbl">kom za miks</div>
+          </div>
+          <div class="plant-calc-item">
+            <div class="plant-calc-val">${b.cijena.toFixed(2)} €</div>
+            <div class="plant-calc-lbl">po biljci</div>
+          </div>
+        </div>
+        <div class="plant-note"><i class="fas fa-circle-info" style="color:var(--zelena-l);margin-right:4px"></i>${b.odrzavanje}</div>
+      </div>
+    </div>`;
+}
+
+
+function tipColor(t) {
+  const m = { sedum:'#e8f5e9', cuvarkuca:'#e3f0ff', bilje:'#f3e8ff', cvijece:'#fce4ec', trava:'#fffde7', grmlje:'#efebe9' };
+  return m[t] || '#f0f7f4';
+}
+function tipEmoji(t) {
+  const m = { sedum:'🌿', cuvarkuca:'🔵', bilje:'🌱', cvijece:'🌸', trava:'🌾', grmlje:'🌳' };
+  return m[t] || '🌿';
+}
+
+// ─── BAZA BILJAKA ─────────────────────────────────────────────────────────────
+(function initBiljkeSection() {
+  const filters = [
+    { k:'all',      l:'Sve' },
+    { k:'sedum',    l:'Sedum' },
+    { k:'cuvarkuca',l:'Čuvarkuća' },
+    { k:'bilje',    l:'Aromatično bilje' },
+    { k:'cvijece',  l:'Cvijeće' },
+    { k:'trava',    l:'Trave' },
+    { k:'grmlje',   l:'Grmlje' },
+    { k:'med',      l:'🌊 Mediteran' },
+    { k:'kon',      l:'🌾 Kontinentalna' },
+    { k:'ext',      l:'Ekstenzivni' },
+    { k:'int',      l:'Intenzivni' },
+  ];
+  let aktivan = 'all';
+
+  const fEl  = document.getElementById('biljkeFilters');
+  const gEl  = document.getElementById('biljkeGrid');
+  if (!fEl || !gEl) return;
+
+  fEl.innerHTML = filters.map(f =>
+    `<div class="fchip ${f.k==='all'?'active':''}" data-fk="${f.k}" onclick="setBiljkeFilter('${f.k}')">${f.l}</div>`
+  ).join('');
+
+  window.setBiljkeFilter = (k) => {
+    aktivan = k;
+    fEl.querySelectorAll('.fchip').forEach(c => c.classList.toggle('active', c.dataset.fk === k));
+    renderBiljkeGrid();
+  };
+
+  function renderBiljkeGrid() {
+    const filtered = BILJKE.filter(b => {
+      if (aktivan === 'all') return true;
+      if (aktivan === 'med') return b.klima === 'mediteranska' || b.klima === 'oboje';
+      if (aktivan === 'kon') return b.klima === 'kontinentalna' || b.klima === 'oboje';
+      if (aktivan === 'ext') return b.tip_krova === 'ekstenzivni' || b.tip_krova === 'oba';
+      if (aktivan === 'int') return b.tip_krova === 'intenzivni'  || b.tip_krova === 'oba';
+      return b.tip_biljke === aktivan;
+    });
+
+    gEl.innerHTML = filtered.map(b => {
+      const klimaLabel = b.klima === 'mediteranska' ? 'Mediteran' : b.klima === 'kontinentalna' ? 'Kontinentalna' : 'Obje klime';
+      const klimaCls   = b.klima === 'mediteranska' ? 'bk-klima-med' : b.klima === 'kontinentalna' ? 'bk-klima-kon' : 'bk-klima-oba';
+      const tipLabel   = b.tip_krova === 'ekstenzivni' ? 'Ekstenzivni' : b.tip_krova === 'intenzivni' ? 'Intenzivni' : 'Oba tipa';
+      const tipCls     = b.tip_krova === 'ekstenzivni' ? 'bk-tip-ext' : b.tip_krova === 'intenzivni' ? 'bk-tip-int' : 'bk-tip-oba';
+      const sušaTag    = b.otpornost_na_sušu === 'visoka' ? '<span class="bk-tag pt-green">Suša ✓</span>' : '';
+      const solTag     = b.tolerancija_sol ? '<span class="bk-tag pt-blue">Sol ✓</span>' : '';
+      return `<div class="bk-card">
+        <img src="${b.img||'sedum.png'}" class="bk-img" alt="${b.ime_hr}" loading="lazy" onerror="this.src='sedum.png'">
+        <div class="bk-body">
+          <div class="bk-name">${b.ime_hr}</div>
+          <div class="bk-lat">${b.ime_lat}</div>
+          <div class="bk-tags">
+            <span class="bk-tag ${klimaCls}">${klimaLabel}</span>
+            <span class="bk-tag ${tipCls}">${tipLabel}</span>
+            ${sušaTag}${solTag}
+          </div>
+        </div>
+        <div class="bk-footer">
+          <span>${b.supstrat} cm supstrata</span>
+          <span class="bk-mraz">do ${b.mraz}°C</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  renderBiljkeGrid();
+})();
+
+// ─── TAB SWITCH ───────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('tabAuto').classList.toggle('active', tab === 'auto');
+  document.getElementById('tabCustom').classList.toggle('active', tab === 'custom');
+  document.getElementById('autoContent').style.display = tab === 'auto' ? '' : 'none';
+  document.getElementById('customContent').style.display = tab === 'custom' ? '' : 'none';
+  if (tab === 'custom') initCustomMode();
+}
+
+// ─── CUSTOM MODE ──────────────────────────────────────────────────────────────
+let customSelected = new Set();
+let customPickFilter = 'all';
+
+function isCompatible(b) {
+  const klimaOk = b.klima === state.region || b.klima === 'oboje';
+  const tipOk   = b.tip_krova === state.roofType || b.tip_krova === 'oba';
+  return klimaOk && tipOk;
+}
+
+function incompatReason(b) {
+  const klimaOk = b.klima === state.region || b.klima === 'oboje';
+  const tipOk   = b.tip_krova === state.roofType || b.tip_krova === 'oba';
+  if (!klimaOk) return b.klima === 'mediteranska' ? 'Samo mediteran' : 'Samo kontinentalna';
+  if (!tipOk)   return b.tip_krova === 'ekstenzivni' ? 'Samo ekstenzivni' : 'Samo intenzivni';
+  return '';
+}
+
+function substrateMin(b) {
+  const m = b.supstrat.match(/(\d+)/);
+  return m ? parseInt(m[1]) : 0;
+}
+
+function getWarnings(selected) {
+  const warnings = [];
+  const maxExt = 10;
+  if (state.roofType === 'ekstenzivni') {
+    selected.filter(b => substrateMin(b) > maxExt).forEach(b => {
+      warnings.push(`<b>${b.ime_hr}</b> zahtijeva min. ${substrateMin(b)} cm supstrata — bolja za intenzivni krov`);
+    });
+  }
+  const hasHigh = selected.some(b => b.otpornost_na_sušu === 'visoka');
+  const hasMed  = selected.some(b => b.otpornost_na_sušu === 'srednja');
+  if (hasHigh && hasMed) warnings.push('Miks visoke i srednje otpornosti na sušu — razmatraj navodnjavanje u sušnim periodima');
+  if (state.region === 'mediteranska') {
+    const noSalt = selected.filter(b => !b.tolerancija_sol);
+    if (noSalt.length) warnings.push(`${noSalt.map(b => b.ime_hr).join(', ')} — slabija tolerancija na sol (priobalno područje)`);
+  }
+  return warnings;
+}
+
+function initCustomMode() {
+  customSelected = new Set();
+  customPickFilter = 'all';
+  const container = document.getElementById('customContent');
+  const tipLabels = { all:'Sve', sedum:'Sedum', cuvarkuca:'Čuvarkuća', bilje:'Bilje', cvijece:'Cvijeće', trava:'Trave', grmlje:'Grmlje' };
+  const chips = Object.entries(tipLabels).map(([k,l]) =>
+    `<div class="fchip ${k==='all'?'active':''}" data-f="${k}" onclick="setPickFilter('${k}')">${l}</div>`
+  ).join('');
+  container.innerHTML = `
+    <div class="custom-layout">
+      <div>
+        <div class="res-title" style="margin-bottom:6px">Odaberi biljke za svoj miks</div>
+        <p class="custom-hint">Klikni na biljke koje želiš — nekompatibilne za tvoju konfiguraciju su zasjenjena. Možeš odabrati 2–6 biljaka, površina se ravnomjerno dijeli.</p>
+        <div class="custom-filter-bar">${chips}</div>
+        <div class="plant-pick-grid" id="pickGrid"></div>
+      </div>
+      <div class="custom-summary">
+        <div class="csm-header">
+          <h3>Tvoj miks</h3>
+          <p id="csmSubtitle">Nije odabrana nijedna biljka</p>
+        </div>
+        <div class="csm-body" id="csmBody"></div>
+      </div>
+    </div>`;
+  renderPickGrid();
+  renderCustomSummary();
+}
+
+function setPickFilter(f) {
+  customPickFilter = f;
+  document.querySelectorAll('#customContent .fchip').forEach(c => c.classList.toggle('active', c.dataset.f === f));
+  renderPickGrid();
+}
+
+function renderPickGrid() {
+  const grid = document.getElementById('pickGrid');
+  if (!grid) return;
+  const filtered = BILJKE.filter(b => customPickFilter === 'all' || b.tip_biljke === customPickFilter);
+  grid.innerHTML = filtered.map(b => {
+    const compat = isCompatible(b);
+    const sel    = customSelected.has(b.id);
+    const reason = compat ? '' : `<div class="ppc-tag-incompat">${incompatReason(b)}</div>`;
+    const tags   = [
+      b.otpornost_na_sušu === 'visoka' ? `<span class="ppc-tag pt-green">Suša</span>` : '',
+      b.tolerancija_sol ? `<span class="ppc-tag pt-blue">Sol</span>` : '',
+      `<span class="ppc-tag" style="background:#f0f7f4;color:var(--zelena)">${b.supstrat} cm</span>`
+    ].join('');
+    return `<div class="plant-pick-card ${sel?'ppc-selected':''} ${compat?'':'ppc-incompat'}"
+               onclick="togglePickPlant(${b.id})">
+      <img src="${b.img||'sedum.png'}" class="ppc-img" alt="${b.ime_hr}" loading="lazy" onerror="this.src='sedum.png'">
+      <div class="ppc-check"><i class="fas fa-check"></i></div>
+      <div class="ppc-body">
+        <div class="ppc-name">${b.ime_hr}</div>
+        <div class="ppc-lat">${b.ime_lat}</div>
+        <div class="ppc-meta">${tags}${reason}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togglePickPlant(id) {
+  const b = BILJKE.find(x => x.id === id);
+  if (!b || !isCompatible(b)) return;
+  if (customSelected.has(id)) {
+    customSelected.delete(id);
+  } else {
+    if (customSelected.size >= 6) { alert('Maksimalno 6 biljaka u miksu.'); return; }
+    customSelected.add(id);
+  }
+  renderPickGrid();
+  renderCustomSummary();
+}
+
+function renderCustomSummary() {
+  const body     = document.getElementById('csmBody');
+  const subtitle = document.getElementById('csmSubtitle');
+  if (!body) return;
+  const selected = BILJKE.filter(b => customSelected.has(b.id));
+  if (!selected.length) {
+    subtitle.textContent = 'Nije odabrana nijedna biljka';
+    body.innerHTML = `<div class="csm-empty"><i class="fas fa-seedling" style="font-size:28px;opacity:.3;display:block;margin-bottom:8px"></i>Klikni na biljke lijevo da ih dodaš u miks</div>`;
+    return;
+  }
+  const n       = selected.length;
+  const udjelPct = Math.round(100 / n);
+  const površina = +(state.area / n).toFixed(1);
+  subtitle.textContent = `${n} ${n===1?'biljka':n<5?'biljke':'biljaka'} · po ${udjelPct}% površine`;
+
+  let sadniceEur = 0;
+  const rows = selected.map(b => {
+    const kom = Math.ceil(površina * b.pm2);
+    const eur = +(kom * b.cijena).toFixed(2);
+    sadniceEur += eur;
+    return `<div class="csm-row">
+      <span class="csm-pct">${udjelPct}%</span>
+      <span class="csm-name">${b.ime_hr}<br><span style="font-size:10px;color:var(--muted);font-weight:400">${površina} m² · ${b.pm2}/m²</span></span>
+      <span class="csm-kom">${kom} kom</span>
+    </div>`;
+  }).join('');
+
+  const isExt      = state.roofType === 'ekstenzivni';
+  const depthM     = isExt ? 0.10 : 0.25;
+  const sup_m3     = +(state.area * depthM * 1.3).toFixed(1);
+  const sup_eur    = +(sup_m3 * 80).toFixed(0);
+  const dren_eur   = +(state.area * (isExt ? 8 : 12)).toFixed(0);
+  sadniceEur       = +sadniceEur.toFixed(0);
+  const total      = sup_eur + dren_eur + sadniceEur;
+  const pm2        = +(total / state.area).toFixed(2);
+
+  const warnings = getWarnings(selected);
+  const warnHtml = warnings.length
+    ? `<div class="csm-warn"><strong><i class="fas fa-triangle-exclamation" style="color:#f59e0b"></i> Upozorenje kombinacije:</strong>${warnings.map(w=>`• ${w}`).join('<br>')}</div>`
+    : '';
+
+  body.innerHTML = `
+    <div style="margin-bottom:4px">${rows}</div>
+    ${warnHtml}
+    <div class="csm-total">
+      <div class="csm-total-val">${pm2.toFixed(2)} € <span style="font-size:14px;font-weight:500">/m²</span></div>
+      <div class="csm-total-lbl">Sadnice + supstrat + drenaža<br>Ukupno ~${total.toLocaleString('hr-HR')} €</div>
+    </div>
+    <button class="btn-gen" onclick="generateCustomCalc()" ${n < 2 ? 'disabled' : ''}>
+      <i class="fas fa-file-invoice"></i> Generiraj detaljni izračun
+    </button>`;
+}
+
+function generateCustomCalc() {
+  const selected = BILJKE.filter(b => customSelected.has(b.id));
+  if (selected.length < 2) return;
+  const n      = selected.length;
+  const udjelF = 1 / n;
+  const udjeli = Array(n).fill(udjelF);
+  const mat    = calcMaterialsCustom(selected, udjeli);
+
+  const fmt = v => new Intl.NumberFormat('hr-HR', { minimumFractionDigits:2, maximumFractionDigits:2 }).format(v);
+  const regLabel = state.region === 'mediteranska'
+    ? '<div class="region-badge mediteranska">🌊 Mediteranska klima — Dalmacija / Istra / Primorje</div>'
+    : '<div class="region-badge kontinentalna">🌾 Kontinentalna klima — Zagreb / Slavonija / Zagorje</div>';
+  const roofLabel = state.roofType === 'ekstenzivni' ? 'Ekstenzivni zeleni krov' : 'Intenzivni zeleni krov';
+  const plantCards = selected.map((b, i) => renderPlantCard(b, i, udjelF)).join('');
+  const sadBreakdown = mat.sadnice_breakdown.map(s =>
+    `<div class="mat-row">
+      <div class="mat-row-left">
+        <div class="mat-row-icon" style="background:${tipColor(s.biljka.tip_biljke)}">${tipEmoji(s.biljka.tip_biljke)}</div>
+        <div>
+          <div class="mat-row-name">${s.biljka.ime_hr} <span style="font-weight:400;color:var(--muted)">(${s.kom} kom)</span></div>
+          <div class="mat-row-detail">${s.površina} m² × ${s.biljka.pm2} kom/m² × ${s.biljka.cijena.toFixed(2)} €</div>
+        </div>
+      </div>
+      <div class="mat-row-price">${s.eur.toFixed(2)} €</div>
+    </div>`).join('');
+
+  document.getElementById('autoContent').innerHTML = `
+    ${regLabel}
+    <div class="res-section">
+      <div class="res-title">Tvoj vlastiti miks</div>
+      <div class="res-sub">${selected.length} vrsta · ravnomjerna raspodjela (${Math.round(udjelF*100)}% po biljci) · ${roofLabel.toLowerCase()} · ${state.area} m²</div>
+      <div class="plant-grid">${plantCards}</div>
+    </div>
+    <div class="res-section">
+      <div class="res-title">Kalkulator materijala</div>
+      <div class="res-sub">Okvirni izračun za ${state.area} m² — ${state.roofType === 'ekstenzivni' ? 'supstrat ~10 cm' : 'supstrat ~25 cm'}.</div>
+      <div class="mat-calc">
+        <div class="mat-calc-header"><h3>Pregled troškova</h3><p>Ravnomjerni miks — ${Math.round(udjelF*100)}% po biljci</p></div>
+        <div class="mat-rows">
+          <div class="mat-row">
+            <div class="mat-row-left"><div class="mat-row-icon" style="background:#e8f5e9">🪨</div>
+              <div><div class="mat-row-name">Supstrat</div><div class="mat-row-detail">${mat.supstrat_m3} m³ × 80 €/m³</div></div></div>
+            <div class="mat-row-price">${fmt(mat.supstrat_eur)} €</div>
+          </div>
+          <div class="mat-row">
+            <div class="mat-row-left"><div class="mat-row-icon" style="background:#fff3e0">💧</div>
+              <div><div class="mat-row-name">Drenaža + filc filter</div><div class="mat-row-detail">${state.area} m² × ${state.roofType === 'ekstenzivni' ? '8' : '12'} €/m²</div></div></div>
+            <div class="mat-row-price">${fmt(mat.drenaža_eur)} €</div>
+          </div>
+          ${sadBreakdown}
+        </div>
+        <div class="mat-total">
+          <div class="mat-total-lbl">Cijena paketa po m²<br><span style="font-size:12px;font-weight:400;opacity:.8">Informativni izračun (materijal + biljke)</span></div>
+          <div style="text-align:right">
+            <div class="mat-total-val">${fmt(mat.cijena_po_m2)} € <span style="font-size:16px;font-weight:500">/m²</span></div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.7);margin-top:4px">Ukupno: ${fmt(mat.total)} €</div>
+          </div>
+        </div>
+      </div>
+      <div class="savings-box">
+        <div class="savings-item"><div class="savings-val">~${mat.ušteda_god} €</div><div class="savings-lbl">godišnja ušteda na energiji</div></div>
+        <div class="savings-item"><div class="savings-val">${mat.co2_god} kg</div><div class="savings-lbl">CO₂ sekvestracija godišnje</div></div>
+      </div>
+      <div style="margin-top:16px;background:#fff8e1;border:1px solid #ffe082;border-radius:12px;padding:16px 18px;display:flex;gap:12px;align-items:flex-start">
+        <i class="fas fa-triangle-exclamation" style="color:#f59e0b;font-size:18px;margin-top:2px;flex-shrink:0"></i>
+        <div style="font-size:12px;color:#5a4a1a;line-height:1.7">
+          <strong style="display:block;margin-bottom:4px;font-size:13px">Što nije uključeno u ovaj izračun:</strong>
+          <strong>Hidroizolacija</strong> — obavezna, tipično <strong>15–40 €/m²</strong> materijal.<br>
+          <strong>Ugradnja</strong> — orijentacijski <strong>20–50 €/m²</strong> za kompletan sustav.<br>
+          <strong>Statički proračun</strong> — obavezan; zeleni krov nosi 80–400 kg/m².
+        </div>
+      </div>
+    </div>`;
+
+  switchTab('auto');
+  document.getElementById('results').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function calcMaterialsCustom(plants, udjeli) {
+  const area  = state.area;
+  const isExt = state.roofType === 'ekstenzivni';
+  const depthM      = isExt ? 0.10 : 0.25;
+  const supstrat_m3 = +(area * depthM * 1.3).toFixed(1);
+  const supstrat_eur = +(supstrat_m3 * 80).toFixed(2);
+  const drenaža_eur  = +(area * (isExt ? 8 : 12)).toFixed(2);
+  let sadnice_eur = 0, sadnice_breakdown = [];
+  plants.forEach((b, i) => {
+    const površina_b = +(area * udjeli[i]).toFixed(1);
+    const kom        = Math.ceil(površina_b * b.pm2);
+    const eur        = +(kom * b.cijena).toFixed(2);
+    sadnice_eur     += eur;
+    sadnice_breakdown.push({ biljka:b, kom, eur, površina: površina_b });
+  });
+  sadnice_eur = +sadnice_eur.toFixed(2);
+  const total        = supstrat_eur + drenaža_eur + sadnice_eur;
+  const cijena_po_m2 = +(total / area).toFixed(2);
+  const co2_god      = +(area * (isExt ? 1.5 : 3.0)).toFixed(0);
+  const ušteda_god   = +(area * (isExt ? 2.5 : 4.0)).toFixed(0);
+  return { supstrat_m3, supstrat_eur, drenaža_eur, sadnice_eur, sadnice_breakdown, total, cijena_po_m2, co2_god, ušteda_god };
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<title>Baza biljaka — Zeleni krov kalkulator</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 13px; color: #1b2e1b; max-width: 860px; margin: 40px auto; padding: 0 24px; line-height: 1.5; }
+  h1 { font-size: 22px; color: #2d6a4f; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #5a7869; margin-bottom: 32px; }
+  h2 { font-size: 15px; color: #2d6a4f; border-bottom: 2px solid #95d5b2; padding-bottom: 6px; margin: 32px 0 12px; text-transform: uppercase; letter-spacing: .06em; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+  th { background: #2d6a4f; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+  td { padding: 7px 10px; border-bottom: 1px solid #e8f0ec; vertical-align: top; font-size: 12px; }
+  tr:nth-child(even) td { background: #f0f7f4; }
+  .name-hr { font-weight: 700; color: #1b2e1b; }
+  .name-lat { color: #5a7869; font-style: italic; font-size: 11px; }
+  .tag { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 10px; font-weight: 700; margin-right: 2px; white-space: nowrap; }
+  .tag-med  { background: #e8f4fd; color: #1565a0; }
+  .tag-kon  { background: #f3ede8; color: #5a3e28; }
+  .tag-oba  { background: #e8f5e9; color: #2d6a4f; }
+  .tag-ext  { background: #f0faf5; color: #2d6a4f; }
+  .tag-int  { background: #fdf3e7; color: #7a5c44; }
+  .tag-both { background: #f5f0e8; color: #7a5c44; }
+  .tag-yes  { background: #e8f5e9; color: #2d6a4f; }
+  .tag-no   { background: #fce4ec; color: #880e4f; }
+  .note { font-size: 11px; color: #5a7869; }
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #d0e8d8; font-size: 11px; color: #5a7869; }
+  @media print { body { margin: 20px; } }
+</style>
+</head>
+<body>
+
+<h1>Baza biljaka — Zeleni krov kalkulator</h1>
+<div class="subtitle">
+  Specifikacije svih 38 vrsta prilagođenih za zelene krovove u Hrvatskoj · Verzija 1.0<br>
+  Izvor podataka: PMC hortikulturne studije, Bauder HR, rasadnički katalozi 2024/2025
+</div>
+
+<p style="background:#f0f7f4;border-left:4px solid #2d6a4f;padding:12px 16px;font-size:12px;line-height:1.7;margin-bottom:8px">
+  <strong>Napomena o primjeni:</strong> Sve biljke su selektirane prema dvjema klimatskim zonama Hrvatske
+  (mediteranska i kontinentalna) i dvama tipovima zelenih krovova (ekstenzivni i intenzivni).
+  Cijene sadnica su orijentacijske (veleprodajne/rasadničke cijene 2025).
+  Kalkulator koristi ove podatke za automatski prijedlog miksa i izračun troškova materijala.
+</p>
+
+<!-- ── SEDUM ── -->
+<h2>🌿 Sedumi (Sedum / Hylotelephium)</h2>
+<table>
+  <tr>
+    <th>Naziv</th>
+    <th>Klima</th>
+    <th>Tip krova</th>
+    <th>Mraz</th>
+    <th>Suša</th>
+    <th>Sol</th>
+    <th>Supstrat</th>
+    <th>kom/m²</th>
+    <th>Napomena</th>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Živi kamen</span><br><span class="name-lat">Sedum acre</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>4–8 cm</td>
+    <td>16</td>
+    <td class="note">Pionirska vrsta; žuti cvijetovi lipnja–srpnja; gotovo bez održavanja.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Bijeli žednjak</span><br><span class="name-lat">Sedum album</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>4–10 cm</td>
+    <td>16</td>
+    <td class="note">Bijeli cvijetovi ljeti; samosjemeno; brzo popunjava površinu.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Modrikasti žednjak</span><br><span class="name-lat">Sedum rupestre</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−35°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>4–10 cm</td>
+    <td>16</td>
+    <td class="note">Podnosi vjetar; idealno za nagnute plohe i izložene krovove.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Hispanijski žednjak</span><br><span class="name-lat">Sedum hispanicum</span></td>
+    <td><span class="tag tag-med">Mediteran</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−20°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>5–10 cm</td>
+    <td>20</td>
+    <td class="note">Sitni bijelo-ružičasti cvijetovi; odlično za priobalne krovove.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Kavkaski žednjak</span><br><span class="name-lat">Phedimus spurius</span></td>
+    <td><span class="tag tag-kon">Kontinentalna</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−35°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>6–12 cm</td>
+    <td>16</td>
+    <td class="note">Roza–crveni cvijetovi u srpnju; za kontinentalnu klimu s hladnim zimama.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Kamčatski žednjak</span><br><span class="name-lat">Sedum kamtschaticum</span></td>
+    <td><span class="tag tag-kon">Kontinentalna</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−40°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>6–12 cm</td>
+    <td>12</td>
+    <td class="note">Najotporniji sedum na mraz; zlatno-žuti cvijetovi; za kontinentalne zime.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Mediteranski žednjak</span><br><span class="name-lat">Sedum sediforme</span></td>
+    <td><span class="tag tag-med">Mediteran</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−12°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>5–15 cm</td>
+    <td>12</td>
+    <td class="note">Izvrsna performansa na mediteranskim krovovima; poluvazdazelena.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Jesenski žednjak</span><br><span class="name-lat">Hylotelephium spectabile</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−20°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>12–20 cm</td>
+    <td>9</td>
+    <td class="note">Ružičasti cvijetovi kolovoz–rujan; privlači pčele i leptire.</td>
+  </tr>
+</table>
+
+<!-- ── ČUVARKUĆA ── -->
+<h2>🔵 Čuvarkuće i sukulenti (Sempervivum / Delosperma)</h2>
+<table>
+  <tr>
+    <th>Naziv</th><th>Klima</th><th>Tip krova</th><th>Mraz</th><th>Suša</th><th>Sol</th><th>Supstrat</th><th>kom/m²</th><th>Napomena</th>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Čuvarkuća</span><br><span class="name-lat">Sempervivum tectorum</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−25°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>4–8 cm</td>
+    <td>20</td>
+    <td class="note">Stoljetna biljka krovova; razmnožava se rozetama; za najtanje supstrate.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Paučinasta čuvarkuća</span><br><span class="name-lat">Sempervivum arachnoideum</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−25°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>4–8 cm</td>
+    <td>25</td>
+    <td class="note">Dekorativne bijele niti; za krajnje plitke supstrate (4–5 cm).</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Hardy ledena biljka</span><br><span class="name-lat">Delosperma cooperi</span></td>
+    <td><span class="tag tag-med">Mediteran</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−18°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>6–14 cm</td>
+    <td>9</td>
+    <td class="note">Vatreno-ružičasti cvijetovi cijelo ljeto; južnoafrička sukulenta prilagođena mediteranu.</td>
+  </tr>
+</table>
+
+<!-- ── AROMATIČNO BILJE ── -->
+<h2>🌱 Aromatično bilje (Thymus / Lavandula / Salvia i dr.)</h2>
+<table>
+  <tr>
+    <th>Naziv</th><th>Klima</th><th>Tip krova</th><th>Mraz</th><th>Suša</th><th>Sol</th><th>Supstrat</th><th>kom/m²</th><th>Napomena</th>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Majčina dušica</span><br><span class="name-lat">Thymus serpyllum</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>6–12 cm</td>
+    <td>12</td>
+    <td class="note">Aromatična prostirka; ljubičasti cvijetovi privlače pčele; za oba klimatska pojasa.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Timijan</span><br><span class="name-lat">Thymus vulgaris</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−20°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>8–15 cm</td>
+    <td>9</td>
+    <td class="note">Kulinarsko-dekorativno; lagano rezanje godišnje za gušći rast.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Lavanda</span><br><span class="name-lat">Lavandula angustifolia</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-int">Intenzivni</span></td>
+    <td>−20°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>20–30 cm</td>
+    <td>4</td>
+    <td class="note">Zahtijeva min. 20 cm supstrata — isključivo za intenzivni krov. Rezanje na 1/3 nakon cvatnje.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Ružmarin</span><br><span class="name-lat">Salvia rosmarinus</span></td>
+    <td><span class="tag tag-med">Mediteran</span></td>
+    <td><span class="tag tag-int">Intenzivni</span></td>
+    <td>−12°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>20–35 cm</td>
+    <td>2</td>
+    <td class="note">Autohtona mediteranska vrsta; samo za prioblje; rezanje 1–2× godišnje.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Kadulja</span><br><span class="name-lat">Salvia officinalis</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−20°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>12–20 cm</td>
+    <td>4</td>
+    <td class="note">Kulinarsko i dekorativno; ljubičasti cvijetovi privlače oprašivače.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Smilje</span><br><span class="name-lat">Helichrysum italicum</span></td>
+    <td><span class="tag tag-med">Mediteran</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−10°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>10–20 cm</td>
+    <td>4</td>
+    <td class="note">Srebrno-sivo lišće; zlatnožuti cvijetovi; dalmatinska autohtona biljka.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Origano</span><br><span class="name-lat">Origanum vulgare</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−25°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>8–15 cm</td>
+    <td>9</td>
+    <td class="note">Samosjemeno; rezanje na ½ visine u proljeće; dobro s timijanom.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Morski kopar</span><br><span class="name-lat">Crithmum maritimum</span></td>
+    <td><span class="tag tag-med">Mediteran</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−8°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>7–15 cm</td>
+    <td>6</td>
+    <td class="note">Dalmatinska obalska biljka s iznimnom sol-tolerancijom; za krovove uz more.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Vlasac</span><br><span class="name-lat">Allium schoenoprasum</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>10–15 cm</td>
+    <td>12</td>
+    <td class="note">Kulinarsko i dekorativno; ružičasti cvijetovi u svibnju; samosjemeno.</td>
+  </tr>
+</table>
+
+<!-- ── CVIJEĆE ── -->
+<h2>🌸 Cvijeće i trajnice</h2>
+<table>
+  <tr>
+    <th>Naziv</th><th>Klima</th><th>Tip krova</th><th>Mraz</th><th>Suša</th><th>Sol</th><th>Supstrat</th><th>kom/m²</th><th>Napomena</th>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Morska lavanda</span><br><span class="name-lat">Limonium virgatum</span></td>
+    <td><span class="tag tag-med">Mediteran</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−10°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>10–15 cm</td>
+    <td>6</td>
+    <td class="note">Prirodna obalska biljka Jadrana; ljupki ljubičasti cvijetovi; minimalno održavanje.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Brazatka</span><br><span class="name-lat">Armeria maritima</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>8–15 cm</td>
+    <td>12</td>
+    <td class="note">Ružičasti pomponi travanj–listopad; idealna za prioblje i dekorativne krovove.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Kartuzijanski karanfil</span><br><span class="name-lat">Dianthus carthusianorum</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−35°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>10–15 cm</td>
+    <td>9</td>
+    <td class="note">Crveno-ružičasti cvijetovi; povećava bioraznolikost krova; autohtona vrsta.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Hajdučka trava</span><br><span class="name-lat">Achillea millefolium</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−35°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>10–15 cm</td>
+    <td>9</td>
+    <td class="note">Bijeli cvijetovi; sprječava korov; samosjemeno; dobra u kombinaciji sa sedumima.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Patuljasta perunika</span><br><span class="name-lat">Iris pumila</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>10–15 cm</td>
+    <td>9</td>
+    <td class="note">Najniža perunika (15–20 cm); ljubičasti cvijetovi u travnju; dekorativna.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Jagnjeće uši</span><br><span class="name-lat">Stachys byzantina</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−25°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>10–15 cm</td>
+    <td>9</td>
+    <td class="note">Srebrno-sivo baršunasto lišće; dekorativno cijelu godinu bez cvatnje.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Proljetni petoprst</span><br><span class="name-lat">Potentilla neumanniana</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>8–15 cm</td>
+    <td>12</td>
+    <td class="note">Žuti cvijetovi u proljeće; niska prostirka 5–10 cm; za ekstenzivne krovove.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Kamenjarka</span><br><span class="name-lat">Saxifraga paniculata</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>6–12 cm</td>
+    <td>16</td>
+    <td class="note">Rozeta-biljka sa stjenovitih staništa; bijeli cvijetovi u lipnju.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Ukrasna kadulja</span><br><span class="name-lat">Salvia nemorosa</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>10–15 cm</td>
+    <td>6</td>
+    <td class="note">Plavo-ljubičasta cvatnja u lipnju; privlači leptire; dobra uz trave.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Aubriecija</span><br><span class="name-lat">Aubrieta deltoidea</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−25°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>8–12 cm</td>
+    <td>12</td>
+    <td class="note">Bogata proljetna cvatnja; porijeklom s balkanskih litica; dobra u mixu sa sedumima.</td>
+  </tr>
+</table>
+
+<!-- ── TRAVE ── -->
+<h2>🌾 Dekorativne trave</h2>
+<table>
+  <tr>
+    <th>Naziv</th><th>Klima</th><th>Tip krova</th><th>Mraz</th><th>Suša</th><th>Sol</th><th>Supstrat</th><th>kom/m²</th><th>Napomena</th>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Plava vlasulja</span><br><span class="name-lat">Festuca glauca</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>8–15 cm</td>
+    <td>9</td>
+    <td class="note">Plavo-siva dekorativna trava; ne širi se agresivno; dobar vizualni kontrast.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Ovčja vlasulja</span><br><span class="name-lat">Festuca ovina</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-ext">Ekstenzivni</span></td>
+    <td>−30°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>8–15 cm</td>
+    <td>9</td>
+    <td class="note">Tanka trava u jastucima; dobra u kombinaciji sa sedumima i čuvarkućom.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Mediteranska trava</span><br><span class="name-lat">Brachypodium phoenicoides</span></td>
+    <td><span class="tag tag-med">Mediteran</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−15°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>12–20 cm</td>
+    <td>6</td>
+    <td class="note">Mediteranska trava; dekorativna smeđa boja u jesen; autohtona vrsta Dalmacije.</td>
+  </tr>
+</table>
+
+<!-- ── GRMLJE ── -->
+<h2>🌳 Grmlje i puzavice</h2>
+<table>
+  <tr>
+    <th>Naziv</th><th>Klima</th><th>Tip krova</th><th>Mraz</th><th>Suša</th><th>Sol</th><th>Supstrat</th><th>kom/m²</th><th>Napomena</th>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Puzajuća drijenjača</span><br><span class="name-lat">Cotoneaster dammeri</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-int">Intenzivni</span></td>
+    <td>−25°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>20–30 cm</td>
+    <td>2</td>
+    <td class="note">Puzajuće; crvene bobice u jesen; zimzelena; min. 20 cm supstrata.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Horizontalni kotoneaster</span><br><span class="name-lat">Cotoneaster horizontalis</span></td>
+    <td><span class="tag tag-oba">Obje</span></td>
+    <td><span class="tag tag-int">Intenzivni</span></td>
+    <td>−25°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>25–40 cm</td>
+    <td>1</td>
+    <td class="note">Crvene bobice cijelu zimu; za veće intenzivne površine; rijetko rezanje.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Japanska spireja</span><br><span class="name-lat">Spiraea japonica</span></td>
+    <td><span class="tag tag-kon">Kontinentalna</span></td>
+    <td><span class="tag tag-int">Intenzivni</span></td>
+    <td>−25°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>25–40 cm</td>
+    <td>1</td>
+    <td class="note">Kompaktni grm; ružičasti cvijetovi lipanj–srpanj; za kontinentalne intenzivne krovove.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Vrijesak / Erika</span><br><span class="name-lat">Calluna vulgaris</span></td>
+    <td><span class="tag tag-kon">Kontinentalna</span></td>
+    <td><span class="tag tag-both">Oba tipa</span></td>
+    <td>−25°C</td>
+    <td><span class="tag tag-yes">Srednja</span></td>
+    <td><span class="tag tag-no">Ne</span></td>
+    <td>15–25 cm</td>
+    <td>4</td>
+    <td class="note">⚠️ Zahtijeva kiseli supstrat pH 4.5–5.5; cvatnja srpanj–listopad.</td>
+  </tr>
+  <tr>
+    <td><span class="name-hr">Cistus</span><br><span class="name-lat">Cistus salviifolius</span></td>
+    <td><span class="tag tag-med">Mediteran</span></td>
+    <td><span class="tag tag-int">Intenzivni</span></td>
+    <td>−12°C</td>
+    <td><span class="tag tag-yes">Visoka</span></td>
+    <td><span class="tag tag-yes">Da</span></td>
+    <td>20–35 cm</td>
+    <td>1</td>
+    <td class="note">Dalmatinska autohtona biljka; bijeli cvijetovi u proljeće; ne podnosi mraz ispod −12°C.</td>
+  </tr>
+</table>
+
+<!-- ── LEGENDE ── -->
+<div style="margin-top:40px;background:#f0f7f4;border-radius:10px;padding:18px 20px">
+  <strong style="display:block;margin-bottom:10px;color:#2d6a4f">Legenda i napomene za primjenu</strong>
+  <table style="font-size:11px">
+    <tr>
+      <td style="padding:3px 12px 3px 0;vertical-align:top;white-space:nowrap"><strong>Klima — Mediteran</strong></td>
+      <td style="padding:3px 0">Dalmacija, Istra, Primorje — blage zime, suha ljeta, sol u zraku</td>
+    </tr>
+    <tr>
+      <td style="padding:3px 12px 3px 0;vertical-align:top;white-space:nowrap"><strong>Klima — Kontinentalna</strong></td>
+      <td style="padding:3px 0">Zagreb, Slavonija, Zagorje — hladne zime (do −25°C), vlažna ljeta</td>
+    </tr>
+    <tr>
+      <td style="padding:3px 12px 3px 0;vertical-align:top;white-space:nowrap"><strong>Ekstenzivni krov</strong></td>
+      <td style="padding:3px 0">Supstrat 6–15 cm · teret 80–150 kg/m² mokro · minimalno održavanje · bez navodnjavanja</td>
+    </tr>
+    <tr>
+      <td style="padding:3px 12px 3px 0;vertical-align:top;white-space:nowrap"><strong>Intenzivni krov</strong></td>
+      <td style="padding:3px 0">Supstrat 20+ cm · teret do 400 kg/m² · navodnjavanje preporučeno · veće mogućnosti</td>
+    </tr>
+    <tr>
+      <td style="padding:3px 12px 3px 0;vertical-align:top;white-space:nowrap"><strong>Sol tolerancija</strong></td>
+      <td style="padding:3px 0">Bitno za lokacije unutar 1–2 km od mora — soli u zraku i kiši oštećuju osjetljive vrste</td>
+    </tr>
+    <tr>
+      <td style="padding:3px 12px 3px 0;vertical-align:top;white-space:nowrap"><strong>kom/m²</strong></td>
+      <td style="padding:3px 0">Preporučena gustoća sadnje za potpuno pokrivanje u 1–2 sezone</td>
+    </tr>
+  </table>
+</div>
+
+<footer>
+  Zeleni Krov Kalkulator &nbsp;·&nbsp; baza podataka v1.0 &nbsp;·&nbsp;
+  Izrađeno uz podršku <strong>Sharp Shark Digital</strong> &nbsp;·&nbsp;
+  Podatkovni izvori: PMC hortikulturne studije, Bauder HR, Rasadnik Latića &nbsp;·&nbsp;
+  Orijentacijske cijene sadnica: veleprodajni katalozi 2024/2025
+</footer>
+
+</body>
+</html>
