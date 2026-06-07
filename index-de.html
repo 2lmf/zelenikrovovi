@@ -517,32 +517,47 @@
           <!-- Parameter 3: Roof Type -->
           <div class="space-y-3">
             <label class="block text-xs font-bold uppercase tracking-wider text-forest-600 dark:text-forest-400">3. Ausführungstyp des Gründachs</label>
-            <div class="grid grid-cols-2 gap-4">
+            <p class="text-2xs text-forest-400"><i class="fa-solid fa-scale-balanced mr-1 text-mint"></i> Typen gemäß FLL-Richtlinie 2018 &amp; ÖNORM L 1131</p>
+            <div class="grid grid-cols-3 gap-2">
               <!-- Extensive Card -->
-              <button onclick="setRoofType('ekstenzivni')" id="card-roof-ext" class="group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200">
-                <div class="text-3xl filter saturate-75 mb-2 group-hover:scale-110 transition-transform">🌿</div>
-                <h4 class="font-bold text-sm text-forest-800 dark:text-white">Extensivdach</h4>
-                <div class="flex gap-1.5 my-1.5">
-                  <span class="px-1.5 py-0.5 rounded bg-forest-100 dark:bg-forest-700 text-3xs font-bold text-forest-750 dark:text-white">6-10 cm</span>
-                  <span class="px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900/40 text-3xs font-bold text-green-700 dark:text-green-300">~110 kg/m²</span>
+              <button onclick="setRoofType('ekstenzivni')" id="card-roof-ext" class="group relative p-3 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200 flex flex-col">
+                <div class="text-xl mb-1 group-hover:scale-110 transition-transform">🌿</div>
+                <h4 class="font-bold text-xs text-forest-800 dark:text-white leading-tight mb-1">Extensiv&shy;dach</h4>
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <span class="px-1.5 py-0.5 rounded bg-forest-100 dark:bg-forest-700 text-[10px] font-bold text-forest-750 dark:text-white w-fit">6–10 cm</span>
+                  <span class="px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900/40 text-[10px] font-bold text-green-700 dark:text-green-300 w-fit">~110 kg/m²</span>
                 </div>
-                <p class="text-2xs text-forest-400 leading-normal">Geringe Substratdicke, niedrige Vegetation (sedum), sehr pflegeleicht.</p>
-                <div class="absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center" id="chk-roof-ext">
-                  <i class="fa-solid fa-check text-2xs text-white"></i>
+                <p class="text-[10px] text-forest-400 leading-snug mt-auto">Sedum, pflegeleicht.</p>
+                <div class="absolute top-2 right-2 h-4 w-4 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center" id="chk-roof-ext">
+                  <i class="fa-solid fa-check text-[8px] text-white"></i>
+                </div>
+              </button>
+
+              <!-- Einfach-Intensiv Card (ÖNORM semi-intensive) -->
+              <button onclick="setRoofType('einfach-intensiv')" id="card-roof-semi" class="group relative p-3 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200 flex flex-col">
+                <div class="text-xl mb-1 group-hover:scale-110 transition-transform">🌸</div>
+                <h4 class="font-bold text-xs text-forest-800 dark:text-white leading-tight mb-1">Einfach-<br>Intensiv</h4>
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <span class="px-1.5 py-0.5 rounded bg-forest-100 dark:bg-forest-700 text-[10px] font-bold text-forest-750 dark:text-white w-fit">12–20 cm</span>
+                  <span class="px-1.5 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/40 text-[10px] font-bold text-yellow-700 dark:text-yellow-300 w-fit">~200 kg/m²</span>
+                </div>
+                <p class="text-[10px] text-forest-400 leading-snug mt-auto">Stauden, Gräser.</p>
+                <div class="absolute top-2 right-2 h-4 w-4 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center" id="chk-roof-semi">
+                  <i class="fa-solid fa-check text-[8px] text-white"></i>
                 </div>
               </button>
 
               <!-- Intensive Card -->
-              <button onclick="setRoofType('intenzivni')" id="card-roof-int" class="group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200">
-                <div class="text-3xl filter saturate-75 mb-2 group-hover:scale-110 transition-transform">🌳</div>
-                <div class="flex gap-1.5 my-1.5">
-                  <span class="px-1.5 py-0.5 rounded bg-forest-100 dark:bg-forest-700 text-3xs font-bold text-forest-750 dark:text-white">20-30 cm</span>
-                  <span class="px-1.5 py-0.5 rounded bg-orange-100 dark:bg-orange-950/40 text-3xs font-bold text-orange-700 dark:text-orange-300">~310 kg/m²</span>
+              <button onclick="setRoofType('intenzivni')" id="card-roof-int" class="group relative p-3 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200 flex flex-col">
+                <div class="text-xl mb-1 group-hover:scale-110 transition-transform">🌳</div>
+                <h4 class="font-bold text-xs text-forest-800 dark:text-white leading-tight mb-1">Intensiv&shy;dach</h4>
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <span class="px-1.5 py-0.5 rounded bg-forest-100 dark:bg-forest-700 text-[10px] font-bold text-forest-750 dark:text-white w-fit">25–40 cm</span>
+                  <span class="px-1.5 py-0.5 rounded bg-orange-100 dark:bg-orange-950/40 text-[10px] font-bold text-orange-700 dark:text-orange-300 w-fit">~350 kg/m²</span>
                 </div>
-                <h4 class="font-bold text-sm text-forest-800 dark:text-white">Intensivdach</h4>
-                <p class="text-2xs text-forest-400 leading-normal">Tiefes Substrat, Sträucher, Stauden und Blumen. Funktioniert als Dachgarten.</p>
-                <div class="absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center" id="chk-roof-int">
-                  <i class="fa-solid fa-check text-2xs text-white"></i>
+                <p class="text-[10px] text-forest-400 leading-snug mt-auto">Dachgarten, Bäume.</p>
+                <div class="absolute top-2 right-2 h-4 w-4 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center" id="chk-roof-int">
+                  <i class="fa-solid fa-check text-[8px] text-white"></i>
                 </div>
               </button>
             </div>
@@ -699,29 +714,38 @@
           </div>
 
           <!-- Environmental Impact Badges -->
-          <div class="grid grid-cols-3 gap-4 border-t border-forest-100 dark:border-forest-800 pt-6">
+          <div class="grid grid-cols-2 gap-3 border-t border-forest-100 dark:border-forest-800 pt-6">
             <!-- CO2 -->
-            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-3">
-              <span class="h-10 w-10 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-base"><i class="fa-solid fa-cloud-sun"></i></span>
-              <div class="space-y-0.5">
-                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none">CO₂-Bindung:</span>
+            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-2.5">
+              <span class="h-9 w-9 flex-shrink-0 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-sm"><i class="fa-solid fa-cloud-sun"></i></span>
+              <div class="min-w-0">
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none truncate">CO₂-Bindung</span>
                 <span class="text-sm font-bold text-forest-800 dark:text-white" id="lbl-val-co2">0 kg/J.</span>
               </div>
             </div>
             <!-- Energy -->
-            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-3">
-              <span class="h-10 w-10 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-base"><i class="fa-solid fa-bolt"></i></span>
-              <div class="space-y-0.5">
-                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none">Stromersparnis:</span>
+            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-2.5">
+              <span class="h-9 w-9 flex-shrink-0 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-sm"><i class="fa-solid fa-bolt"></i></span>
+              <div class="min-w-0">
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none truncate">Strom-Einsparung</span>
                 <span class="text-sm font-bold text-forest-800 dark:text-white" id="lbl-val-energy">0 €/J.</span>
               </div>
             </div>
             <!-- Water -->
-            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-3">
-              <span class="h-10 w-10 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-base"><i class="fa-solid fa-droplet"></i></span>
-              <div class="space-y-0.5">
-                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none">Wasserrückhalt:</span>
+            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-2.5">
+              <span class="h-9 w-9 flex-shrink-0 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-sm"><i class="fa-solid fa-droplet"></i></span>
+              <div class="min-w-0">
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none truncate">Wasserrückhalt</span>
                 <span class="text-sm font-bold text-forest-800 dark:text-white" id="lbl-val-water">0 L/J.</span>
+              </div>
+            </div>
+            <!-- Abflussbeiwert (FLL) -->
+            <div class="p-3 rounded-2xl bg-forest-50 dark:bg-forest-800/40 border border-forest-100 dark:border-forest-800 flex items-center gap-2.5">
+              <span class="h-9 w-9 flex-shrink-0 rounded-xl bg-forest-100 dark:bg-forest-700/60 flex items-center justify-center text-forest-600 dark:text-mint text-sm"><i class="fa-solid fa-water"></i></span>
+              <div class="min-w-0">
+                <span class="block text-3xs font-medium text-forest-400 uppercase leading-none truncate">Abflussbeiwert ψ</span>
+                <span class="text-sm font-bold text-forest-800 dark:text-white" id="lbl-val-abfluss">0,40</span>
+                <span class="block text-3xs text-forest-400">FLL-konform</span>
               </div>
             </div>
           </div>
@@ -807,6 +831,11 @@
                 <p class="text-forest-500 dark:text-forest-450">Gründächer werden durch ökologische Förderprogramme mit bis zu <strong>40% des Wertes</strong> kofinanziert.</p>
               </div>
               <span class="hidden sm:inline-block px-3 py-1 bg-mint/10 border border-mint/25 text-mint font-bold uppercase tracking-wider rounded-lg text-2xs">Förderung bis 40%</span>
+            </div>
+            <!-- FLL / ÖNORM Norm Reference -->
+            <div class="p-3 rounded-2xl border border-forest-100 dark:border-forest-800/60 text-2xs text-forest-500 dark:text-forest-400 flex items-center gap-2 bg-forest-50/50 dark:bg-forest-800/20">
+              <i class="fa-solid fa-scale-balanced text-mint flex-shrink-0"></i>
+              <span><strong class="text-forest-700 dark:text-forest-300">Planungsgrundlage:</strong> FLL-Dachbegrünungsrichtlinie 2018 &amp; ÖNORM L 1131 — Substratklassen, Nassgewicht und Abflussbeiwerte normkonform berechnet.</span>
             </div>
           </div>
         </div>
@@ -1074,6 +1103,7 @@
           <li>• CO₂-Sequestrierung: <strong id="print-co2">120 kg</strong> jährlich.</li>
           <li>• Stromeinsparung (Kühlung): <strong id="print-energy">200 €</strong> jährlich.</li>
           <li>• Regenwasserrückhalt: <strong id="print-water">36.000 Liter</strong> jährlich.</li>
+          <li>• Abflussbeiwert ψ (FLL): <strong id="print-abfluss">0,40</strong> — <span id="print-abfluss-class">Extensivbegrünung</span>.</li>
           <li>• Biodiversität: Bietet Lebensraum für Bestäuber (Bienen und Schmetterlinge).</li>
         </ul>
       </div>
@@ -1093,6 +1123,9 @@
       </p>
       <p>
         * Vor jeglichen Baumaßnahmen ist ein Statiker zur Prüfung der Tragfähigkeit der Gebäudekonstruktion hinzuzuziehen. Datenquellen: PMC Gartenbau-Studien, Bauder DE/AT.
+      </p>
+      <p>
+        * Planungsgrundlage: FLL-Dachbegrünungsrichtlinie 2018 (Forschungsgesellschaft Landschaftsentwicklung Landschaftsbau) &amp; ÖNORM L 1131 (Österreichisches Normungsinstitut). Substratklassen, Nassgewichte und Abflussbeiwerte (ψ) entsprechen den normativen Richtwerten.
       </p>
     </div>
   </section>
@@ -1157,12 +1190,12 @@
       { id:3,  ime_hr:"Felsen-Sedum", ime_lat:"Sedum rupestre", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-35, pm2:16, cijena:0.93, supstrat:"4–10", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Gut verwurzelt und windresistent; ideal für geneigte Flächen." },
       { id:4,  ime_hr:"Spanisches Sedum", ime_lat:"Sedum hispanicum", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-20, pm2:20, cijena:1.50, supstrat:"5–10", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Kleine weiß-rosa Blüten; ausgezeichnet für Küstendächer." },
       { id:5,  ime_hr:"Kaukasisches Sedum", ime_lat:"Phedimus spurius", tip_krova:"ekstenzivni", klima:"kontinentalna", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-35, pm2:16, cijena:1.50, supstrat:"6–12", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Gut für kontinentales Klima; rosa-rote Blüten." },
-      { id:6,  ime_hr:"Kamtschatka-Sedum", ime_lat:"Sedum kamtschaticum", tip_krova:"ekstenzivni", klima:"kontinentalna", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-40, pm2:12, cijena:2.00, supstrat:"6–12", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Eines der frostresistentesten Sedum; goldgelbe Blüten." },
-      { id:7,  ime_hr:"Mediterranes Sedum", ime_lat:"Sedum sediforme", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-12, pm2:12, cijena:2.00, supstrat:"5–15", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Hervorragende Leistung auf Mittelmeerdächern; nicht für starken Frost." },
+      { id:6,  ime_hr:"Balkan-Hauswurz", ime_lat:"Jovibarba hirta", tip_krova:"ekstenzivni", klima:"kontinentalna", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-30, pm2:20, cijena:2.00, supstrat:"4–10", tip_biljke:"cuvarkuca", boja:"🟢", odrzavanje:"Balkan-Endemit der Sempervivum-Familie; bildet dichte Rosetten; Vermehrung durch Ableger; äußerst trockenheitstolerant und pflegeleicht." },
+      { id:7,  ime_hr:"Polster-Sedum", ime_lat:"Sedum dasyphyllum", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-12, pm2:16, cijena:1.80, supstrat:"4–10", tip_biljke:"sedum", boja:"🔵", odrzavanje:"Fein-silbergraues Laub; weiß-rosa Blüten im Juni; Pionierpflanze mediterrane Felsstandorte; kaum Pflege nötig." },
       { id:8,  ime_hr:"Herbst-Sedum", ime_lat:"Hylotelephium spectabile", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-20, pm2:9, cijena:3.50, supstrat:"12–20", tip_biljke:"sedum", boja:"🟢", odrzavanje:"Rosa Blüten August–September; zieht Bienen an." },
       { id:9,  ime_hr:"Hauswurz / Dachwurz", ime_lat:"Sempervivum tectorum", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-25, pm2:20, cijena:2.00, supstrat:"4–8", tip_biljke:"cuvarkuca", boja:"🔵", odrzavanje:"Jahrhundertealte Dachart; vermehrt sich durch Rosetten; minimale Pflege." },
       { id:10, ime_hr:"Spinnweb-Hauswurz", ime_lat:"Sempervivum arachnoideum", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-25, pm2:25, cijena:1.50, supstrat:"4–8", tip_biljke:"cuvarkuca", boja:"🔵", odrzavanje:"Dekorative weiße Fäden zwischen Rosetten; für sehr dünne Dachsubstrate." },
-      { id:11, ime_hr:"Hardy Eisblume", ime_lat:"Delosperma cooperi", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-18, pm2:9, cijena:3.00, supstrat:"6–14", tip_biljke:"cuvarkuca", boja:"🔵", odrzavanje:"Leuchtend rosa Blüten im Sommer; benötigt hervorragende Drainage." },
+      { id:11, ime_hr:"Steinkresse / Goldkörberl", ime_lat:"Aurinia saxatilis", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-25, pm2:9, cijena:2.50, supstrat:"8–15", tip_biljke:"cvijece", boja:"🟡", odrzavanje:"Intensiv goldgelbe Frühlingsblüte April–Mai; nach der Blüte auf ½ zurückschneiden; in jedem Gartencenter erhältlich." },
       { id:12, ime_hr:"Sandthymian / Quendel", ime_lat:"Thymus serpyllum", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-30, pm2:12, cijena:1.59, supstrat:"6–12", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Aromatischer Bodendecker bis 10 cm; lila Blüten ziehen Bienen an." },
       { id:13, ime_hr:"Thymian", ime_lat:"Thymus vulgaris", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-20, pm2:9, cijena:2.00, supstrat:"8–15", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Aromatisches Halbsträuchlein; jährlich leicht schneiden." },
       { id:14, ime_hr:"Lavendel", ime_lat:"Lavandula angustifolia", tip_krova:"intenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-20, pm2:4, cijena:3.50, supstrat:"20–30", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Benötigt tieferes Substrat und Rückschnitt auf 1/3 nach der Sommerblüte." },
@@ -1170,12 +1203,12 @@
       { id:16, ime_hr:"Salbei", ime_lat:"Salvia officinalis", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-20, pm2:4, cijena:2.50, supstrat:"12–20", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Heilsam und dekorativ; lila Blütenähren ziehen Bestäuber an." },
       { id:17, ime_hr:"Curry-Kraut / Strohblume", ime_lat:"Helichrysum italicum", tip_krova:"oba", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-10, pm2:4, cijena:3.50, supstrat:"10–20", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Aromatisches Silberlaub und goldene Blüten; nicht für strenge Kontinentalwinter." },
       { id:18, ime_hr:"Oregano", ime_lat:"Origanum vulgare", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-25, pm2:9, cijena:2.00, supstrat:"8–15", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Breitet sich schnell aus und verträgt Trockenheit gut; auch für Halbintensivdächer." },
-      { id:19, ime_hr:"Meerfenchel", ime_lat:"Crithmum maritimum", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-8, pm2:6, cijena:4.00, supstrat:"7–15", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Einheimische Küstenpflanze; außergewöhnliche Salz- und Trockenheitstoleranz." },
-      { id:20, ime_hr:"Meerlavendel", ime_lat:"Limonium virgatum", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-10, pm2:6, cijena:4.00, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Wunderschöne blauviolette Blüten; ausgezeichnet für Dächer direkt am Meer." },
+      { id:19, ime_hr:"Bergbohnenkraut / Steinquendel", ime_lat:"Satureja montana", tip_krova:"ekstenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-15, pm2:9, cijena:2.50, supstrat:"8–15", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Dalmatinisches Gewürzkraut; blassviolette Blüten im Sommer; einmal jährlich kürzen; ausgezeichnete Trockenheitsresistenz." },
+      { id:20, ime_hr:"Cheddar-Nelke", ime_lat:"Dianthus gratianopolitanus", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-30, pm2:12, cijena:2.50, supstrat:"8–15", tip_biljke:"cvijece", boja:"🩷", odrzavanje:"Duftende rosa Blüten Juni–Juli; ausgesprochen trockenheitstolerant; selbstaussäend; zieht Schmetterlinge an." },
       { id:21, ime_hr:"Grasnelke", ime_lat:"Armeria maritima", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:true, mraz:-30, pm2:12, cijena:4.00, supstrat:"8–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Rosa runde Blüten von Frühling bis Herbst; salzresistent." },
       { id:22, ime_hr:"Karthäuser-Nelke", ime_lat:"Dianthus carthusianorum", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-35, pm2:9, cijena:2.50, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Leuchtend rosa Blüten; steigert Biodiversität und verbreitet sich durch Samen." },
       { id:23, ime_hr:"Blauschwingel", ime_lat:"Festuca glauca", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:true, mraz:-30, pm2:9, cijena:3.00, supstrat:"8–15", tip_biljke:"trava", boja:"🟡", odrzavanje:"Dekoratives bläuliches Niedriggras; alle paar Jahre teilen." },
-      { id:24, ime_hr:"Schaf-Schwingel", ime_lat:"Festuca ovina", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:true, mraz:-30, pm2:9, cijena:2.50, supstrat:"8–15", tip_biljke:"trava", boja:"🟡", odrzavanje:"Bildet dichte niedrige Polster; wunderschön mit Sedum kombinierbar." },
+      { id:24, ime_hr:"Mexikanisches Federgras", ime_lat:"Stipa tenuissima", tip_krova:"ekstenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-20, pm2:9, cijena:3.00, supstrat:"8–15", tip_biljke:"trava", boja:"🟡", odrzavanje:"Zarte goldbeige Blütenähren im Wind; selbstaussäend; ganzjährig dekorativ; in Gartencentern gut erhältlich." },
       { id:25, ime_hr:"Schafgarbe", ime_lat:"Achillea millefolium", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-35, pm2:9, cijena:2.50, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Weiße und gelbe Blüten, außergewöhnliche Robustheit; zieht Bienen an." },
       { id:26, ime_hr:"Zwerg-Schwertlilie", ime_lat:"Iris pumila", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-30, pm2:9, cijena:3.50, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Niedrige Iris (bis 20 cm); blaue Blüten im frühen Frühling." },
       { id:27, ime_hr:"Wollziest / Lammsohr", ime_lat:"Stachys byzantina", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-25, pm2:9, cijena:3.00, supstrat:"10–15", tip_biljke:"cvijece", boja:"🌸", odrzavanje:"Silbrig behaarte Blätter mit samtartiger Textur; zieht Blicke auf sich." },
@@ -1187,8 +1220,8 @@
       { id:33, ime_hr:"Fächerkotoneaster", ime_lat:"Cotoneaster horizontalis", tip_krova:"intenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:1, cijena:5.00, supstrat:"25–40", tip_biljke:"grmlje", boja:"🟤", odrzavanje:"Flaches Wachstum, wunderschöne rote Beeren die den ganzen Winter halten." },
       { id:34, ime_hr:"Japanische Spiraea", ime_lat:"Spiraea japonica", tip_krova:"intenzivni", klima:"kontinentalna", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:1, cijena:5.00, supstrat:"25–40", tip_biljke:"grmlje", boja:"🟤", odrzavanje:"Kompakter Zierstrauch; rosa Blüten Mitte Sommer." },
       { id:35, ime_hr:"Heidekraut / Besenheide", ime_lat:"Calluna vulgaris", tip_krova:"oba", klima:"kontinentalna", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-25, pm2:4, cijena:4.00, supstrat:"15–25", tip_biljke:"grmlje", boja:"🟤", odrzavanje:"Benötigt leicht saures Torfsubstrat; üppige rosa Herbstblüte." },
-      { id:36, ime_hr:"Zistrose", ime_lat:"Cistus salviifolius", tip_krova:"intenzivni", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-12, pm2:1, cijena:5.00, supstrat:"20–35", tip_biljke:"grmlje", boja:"🟤", odrzavanje:"Einheimische dalmatinische Zistrose mit weißen Blüten; außergewöhnliche Trockenheitsresistenz." },
-      { id:37, ime_hr:"Mediterranes Gras", ime_lat:"Brachypodium phoenicoides", tip_krova:"oba", klima:"mediteranska", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:true, mraz:-15, pm2:6, cijena:3.00, supstrat:"12–20", tip_biljke:"trava", boja:"🟡", odrzavanje:"Dekoratives Büschelgras, wunderschöne goldbraune Herbstfärbung." },
+      { id:36, ime_hr:"Russischer Salbei / Blauraute", ime_lat:"Perovskia atriplicifolia", tip_krova:"intenzivni", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"visoka", tolerancija_sol:false, mraz:-25, pm2:2, cijena:4.50, supstrat:"20–35", tip_biljke:"grmlje", boja:"🔵", odrzavanje:"Silberblaue Ährenblüten Juli–September; aromatisch; im Frühjahr stark zurückschneiden; in allen Gartencentern erhältlich." },
+      { id:37, ime_hr:"Hohes Reitgras 'Karl Foerster'", ime_lat:"Calamagrostis x acutiflora", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-30, pm2:4, cijena:4.00, supstrat:"15–25", tip_biljke:"trava", boja:"🟤", odrzavanje:"Aufrecht und windstabil; bronzegoldene Ähren ab Juli; nicht vor Frühjahr zurückschneiden; für Halb- und Intensivdächer." },
       { id:38, ime_hr:"Schnittlauch", ime_lat:"Allium schoenoprasum", tip_krova:"oba", klima:"oboje", sunce:"volle Sonne", otpornost_na_sušu:"srednja", tolerancija_sol:false, mraz:-30, pm2:12, cijena:2.00, supstrat:"10–15", tip_biljke:"bilje", boja:"🟣", odrzavanje:"Dekorativ und essbar; wunderschöne rosa-violette Pompons im Frühling." }
     ];
 
@@ -1202,6 +1235,46 @@
       catalogFilter: 'all',
       includeInstallation: false
     };
+
+    // FLL-Dachbegrünungsrichtlinie 2018 / ÖNORM L 1131 — Normkennwerte je Ausführungstyp
+    const ROOF_CONFIG = {
+      'ekstenzivni': {
+        subDepth: 0.10, nassgewicht: 110, drainPrice: 8,  abfluss: 0.40,
+        energyFactor: 3.5, co2Factor: 1.5, waterFactor: 400,
+        labelShort: 'Extensivdach',
+        labelFull:  'Extensivdach (Sedum und Hauswurzen)',
+        abflussClass: 'Extensivbegrünung',
+        thickDisplay: '10 cm',
+        maxSubDepth: 10,
+      },
+      'einfach-intensiv': {
+        subDepth: 0.18, nassgewicht: 200, drainPrice: 10, abfluss: 0.25,
+        energyFactor: 4.5, co2Factor: 2.5, waterFactor: 550,
+        labelShort: 'Einfach-Intensivdach',
+        labelFull:  'Einfach-Intensivdach (Stauden, Gräser, Kräuter)',
+        abflussClass: 'Einfache Intensivbegrünung',
+        thickDisplay: '18 cm',
+        maxSubDepth: 20,
+      },
+      'intenzivni': {
+        subDepth: 0.30, nassgewicht: 350, drainPrice: 12, abfluss: 0.15,
+        energyFactor: 5.5, co2Factor: 3.5, waterFactor: 700,
+        labelShort: 'Intensivdach',
+        labelFull:  'Intensivdach (Dachgarten – Sträucher und Bäume)',
+        abflussClass: 'Aufwendige Intensivbegrünung',
+        thickDisplay: '30 cm',
+        maxSubDepth: 100,
+      },
+    };
+
+    // Plant compatibility helper — handles the semi-intensive type
+    function isTypeCompatible(plant, roofType) {
+      if (roofType === 'einfach-intensiv') {
+        return (plant.tip_krova === 'intenzivni' || plant.tip_krova === 'oba')
+               && getMinSubstrateDepth(plant) <= 20;
+      }
+      return plant.tip_krova === roofType || plant.tip_krova === 'oba';
+    }
 
     // --- 3D LAYER METADATA ---
     const LAYER_META = {
@@ -1288,9 +1361,10 @@
       document.getElementById('layer-detail-desc').textContent = meta.desc;
       document.getElementById('layer-detail-func').textContent = meta.func;
       
-      // Dynamic depth adjustment for substrate (Layer 2)
+      // Dynamic depth adjustment for substrate (Layer 2) — normkonforme Werte per ROOF_CONFIG
       if (num === 2) {
-        const thicknessText = projectState.roofType === 'ekstenzivni' ? '10 cm (Nassgewicht ~110 kg/m²)' : '25 cm (Nassgewicht ~310 kg/m²)';
+        const cfg = ROOF_CONFIG[projectState.roofType];
+        const thicknessText = `${cfg.thickDisplay} (Nassgewicht ~${cfg.nassgewicht} kg/m²)`;
         document.getElementById('layer-detail-thick').textContent = thicknessText;
       } else {
         document.getElementById('layer-detail-thick').textContent = meta.thick;
@@ -1334,25 +1408,26 @@
     // --- ROOF TYPE ASSIGNMENT ---
     function setRoofType(type) {
       projectState.roofType = type;
-      
-      const isExt = type === 'ekstenzivni';
-      document.getElementById('card-roof-ext').className = isExt 
-        ? "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-forest-50 dark:bg-forest-800/80 border-forest-500 dark:border-mint" 
-        : "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200";
-      
-      document.getElementById('card-roof-int').className = !isExt 
-        ? "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-forest-50 dark:bg-forest-800/80 border-forest-500 dark:border-mint" 
-        : "group relative p-4 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200";
-      
-      document.getElementById('chk-roof-ext').className = isExt ? "absolute top-3 right-3 h-5 w-5 rounded-full bg-forest-600 dark:bg-mint text-white dark:text-forest-900 flex items-center justify-center border-0" : "absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center";
-      document.getElementById('chk-roof-int').className = !isExt ? "absolute top-3 right-3 h-5 w-5 rounded-full bg-forest-600 dark:bg-mint text-white dark:text-forest-900 flex items-center justify-center border-0" : "absolute top-3 right-3 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center";
-      
+
+      const ACTIVE   = "group relative p-3 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-forest-50 dark:bg-forest-800/80 border-forest-500 dark:border-mint flex flex-col";
+      const INACTIVE = "group relative p-3 rounded-2xl border-2 text-left hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-forest-800/40 border-forest-100 dark:border-forest-800 hover:border-mint-200 flex flex-col";
+      const CHK_ON   = "absolute top-2 right-2 h-5 w-5 rounded-full bg-forest-600 dark:bg-mint text-white dark:text-forest-900 flex items-center justify-center border-0";
+      const CHK_OFF  = "absolute top-2 right-2 h-5 w-5 rounded-full border border-forest-200 dark:border-forest-700 flex items-center justify-center";
+
+      document.getElementById('card-roof-ext').className  = type === 'ekstenzivni'      ? ACTIVE : INACTIVE;
+      document.getElementById('card-roof-semi').className = type === 'einfach-intensiv' ? ACTIVE : INACTIVE;
+      document.getElementById('card-roof-int').className  = type === 'intenzivni'       ? ACTIVE : INACTIVE;
+
+      document.getElementById('chk-roof-ext').className   = type === 'ekstenzivni'      ? CHK_ON : CHK_OFF;
+      document.getElementById('chk-roof-semi').className  = type === 'einfach-intensiv' ? CHK_ON : CHK_OFF;
+      document.getElementById('chk-roof-int').className   = type === 'intenzivni'       ? CHK_ON : CHK_OFF;
+
       // Update focused layer description weight if Layer 2 is selected
       const activeLayerNum = document.getElementById('layer-detail-num').textContent;
       if (activeLayerNum == '2') {
         focus3DLayer(2);
       }
-      
+
       // Reset custom selection if roof type changed
       projectState.customSelected.clear();
 
@@ -1420,18 +1495,18 @@
     // --- MAIN ENGINE: CALCULATION CORE ---
     function calculateAll() {
       const area = projectState.area;
-      const isExt = projectState.roofType === 'ekstenzivni';
+      const config = ROOF_CONFIG[projectState.roofType];
       const isMed = projectState.region === 'mediteranska';
-      
-      // 1. Calculate substrate
-      const subDepth = isExt ? 0.10 : 0.25; // 10 cm Extensive, 25 cm Intensive
-      const subVol = +(area * subDepth * 1.3).toFixed(1); // 1.3 compaction factor
-      const subPrice = +(subVol * 80).toFixed(2); // 80 EUR/m³ substrate cost
-      
+
+      // 1. Calculate substrate (FLL-konforme Substrattiefe je Ausführungstyp)
+      const subDepth = config.subDepth;
+      const subVol = +(area * subDepth * 1.3).toFixed(1); // 1.3 Einbaufaktor (Setzung)
+      const subPrice = +(subVol * 80).toFixed(2); // 80 EUR/m³ Substratpreis
+
       // 2. Calculate drainage and geofleece
-      const drainPricePerM2 = isExt ? 8 : 12; // 8 EUR Extensive, 12 EUR Intensive
+      const drainPricePerM2 = config.drainPrice;
       const drainPrice = +(area * drainPricePerM2).toFixed(2);
-      
+
       // 3. Calculate waterproofing
       const waterPrice = +(area * 20).toFixed(2); // 20 EUR/m²
       
@@ -1444,10 +1519,10 @@
       
       if (projectState.hortiTab === 'auto') {
         // Automatic professional algorithm picks 6 plants
-        // Filter compatible
+        // Filter compatible (uses isTypeCompatible() to handle semi-intensive correctly)
         const compatible = BILJKE.filter(b => {
           const regOk = b.klima === projectState.region || b.klima === 'oboje';
-          const typeOk = b.tip_krova === projectState.roofType || b.tip_krova === 'oba';
+          const typeOk = isTypeCompatible(b, projectState.roofType);
           return regOk && typeOk;
         });
         
@@ -1493,7 +1568,7 @@
         
         // Dynamically update Recommended Mix Banner texts for AUTO
         document.getElementById('lbl-auto-title').innerHTML = `<i class="fa-solid fa-award text-mint animate-pulse"></i> Professionelle Dachformel`;
-        document.getElementById('lbl-auto-desc').innerHTML = `Unser Algorithmus hat einen Mix der Top-3-Pflanzen erstellt für <span id="lbl-auto-roof" class="font-bold text-forest-800 dark:text-mint">${isExt ? 'Extensivdach' : 'Intensivdach'}</span> in der Region <span id="lbl-auto-reg" class="font-bold text-forest-800 dark:text-mint">${isMed ? 'Mediterran' : 'Kontinental'}</span>. Die weiteren 3 sind Ergänzungsempfehlungen für Biodiversität.`;
+        document.getElementById('lbl-auto-desc').innerHTML = `Unser Algorithmus hat einen Mix der Top-3-Pflanzen erstellt für <span id="lbl-auto-roof" class="font-bold text-forest-800 dark:text-mint">${config.labelShort}</span> in der Region <span id="lbl-auto-reg" class="font-bold text-forest-800 dark:text-mint">${isMed ? 'Mediterran' : 'Kontinental'}</span>. Die weiteren 3 sind Ergänzungsempfehlungen für Biodiversität.`;
         document.getElementById('lbl-auto-mix-status').textContent = `50% / 30% / 20% Verteilung`;
         
         // Render 6 cards (top 3 with quantities/prices, remaining 3 as supplementary recommendations)
@@ -1535,7 +1610,7 @@
 
           // Dynamically update Recommended Mix Banner texts for CUSTOM
           document.getElementById('lbl-auto-title').innerHTML = `<i class="fa-solid fa-sliders text-mint"></i> Eigene Pflanzenkombination`;
-          document.getElementById('lbl-auto-desc').innerHTML = `Kombination aus <span class="font-bold text-forest-800 dark:text-mint">${numSelected} Pflanzen</span>, die Sie selbst für <span id="lbl-auto-roof" class="font-bold text-forest-800 dark:text-mint">${isExt ? 'Extensivdach' : 'Intensivdach'}</span> in der Region <span id="lbl-auto-reg" class="font-bold text-forest-800 dark:text-mint">${isMed ? 'Mediterran' : 'Kontinental'}</span> ausgewählt haben.`;
+          document.getElementById('lbl-auto-desc').innerHTML = `Kombination aus <span class="font-bold text-forest-800 dark:text-mint">${numSelected} Pflanzen</span>, die Sie selbst für <span id="lbl-auto-roof" class="font-bold text-forest-800 dark:text-mint">${config.labelShort}</span> in der Region <span id="lbl-auto-reg" class="font-bold text-forest-800 dark:text-mint">${isMed ? 'Mediterran' : 'Kontinental'}</span> ausgewählt haben.`;
           document.getElementById('lbl-auto-mix-status').textContent = `Gleichmäßige Verteilung (${Math.round(100/numSelected)}% pro Pflanze)`;
           
           // Render selected cards
@@ -1556,16 +1631,19 @@
       const totalCost = subPrice + drainPrice + waterPrice + plantPriceTotal + installPrice;
       const pricePerM2 = +(totalCost / area).toFixed(2);
       
-      // 7. Energy and Ecological Savings estimates
-      const energySavings = +(area * (isExt ? 3.5 : 5.5)).toFixed(0); // €/year savings
-      const co2Absorption = +(area * (isExt ? 1.5 : 3.5)).toFixed(0); // kg/year CO2
-      const waterRetained = +(area * (isExt ? 400 : 700)).toFixed(0); // Liters/year rainwater retained
-      
+      // 7. Energy and Ecological Savings estimates (FLL-basierte Faktoren je Ausführungstyp)
+      const energySavings = +(area * config.energyFactor).toFixed(0); // €/Jahr Einsparung
+      const co2Absorption = +(area * config.co2Factor).toFixed(0);    // kg/Jahr CO₂-Bindung
+      const waterRetained = +(area * config.waterFactor).toFixed(0);  // Liter/Jahr Regenwasserrückhalt
+
       // 8. ROI (Return on Investment) calculation
       const roiYears = energySavings > 0 ? +(totalCost / energySavings).toFixed(1) : 0.0;
-      
-      // 9. Static opterećenje estimate weight
-      const totalWeight = isExt ? 110 : 310;
+
+      // 9. Static load — Nassgewicht per FLL (normkonform)
+      const totalWeight = config.nassgewicht;
+
+      // 10. Abflussbeiwert ψ per FLL-Richtlinie
+      const abfluss = config.abfluss;
       
       // --- UPDATE DOM VIEWS ---
       document.getElementById('lbl-total-price').textContent = totalCost.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1575,6 +1653,7 @@
       document.getElementById('lbl-val-co2').textContent = co2Absorption.toLocaleString('de-DE') + ' kg/J.';
       document.getElementById('lbl-val-energy').textContent = energySavings.toLocaleString('de-DE') + ' €/J.';
       document.getElementById('lbl-val-water').textContent = waterRetained.toLocaleString('de-DE') + ' L/J.';
+      document.getElementById('lbl-val-abfluss').textContent = abfluss.toFixed(2).replace('.', ',');
       document.getElementById('lbl-static-weight').textContent = totalWeight + ' kg/m²';
       
       // Update Spec table cells
@@ -1603,7 +1682,7 @@
       document.getElementById('print-project-id').textContent = Math.floor(100000 + Math.random() * 900000);
       document.getElementById('print-reg-name').textContent = isMed ? 'Mediterran (Mittelmeerküste, Südtirol)' : 'Kontinental (Wien, Bayern, Alpenvorland)';
       document.getElementById('print-area-val').textContent = area;
-      document.getElementById('print-roof-type-name').textContent = isExt ? 'Extensivdach (Sedum und Hauswurzen)' : 'Intensivdach (Dachgarten - Sträucher und Stauden)';
+      document.getElementById('print-roof-type-name').textContent = config.labelFull;
       
       document.getElementById('print-sub-qty').textContent = subVol + ' m³';
       document.getElementById('print-sub-price').textContent = subPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
@@ -1630,6 +1709,8 @@
       document.getElementById('print-co2').textContent = co2Absorption + ' kg';
       document.getElementById('print-energy').textContent = energySavings + ' €';
       document.getElementById('print-water').textContent = waterRetained.toLocaleString('de-DE') + ' Liter';
+      document.getElementById('print-abfluss').textContent = abfluss.toFixed(2).replace('.', ',');
+      document.getElementById('print-abfluss-class').textContent = config.abflussClass;
       
       document.getElementById('print-plant-mix-breakdown').innerHTML = printBreakdown || `
         <p class="text-gray-500 italic">Kein Mix ausgewählt.</p>`;
@@ -1673,12 +1754,13 @@
     // Temperature Mitigation updates
     function updateTempChart() {
       const isMed = projectState.region === 'mediteranska';
-      const isExt = projectState.roofType === 'ekstenzivni';
-      
-      let tempClassic = isMed ? 82 : 72; // Black roof ljeti
-      let tempAir = isMed ? 38 : 33;     // Ambient temperature
-      let tempGreen = isExt ? 29 : 26;   // Green roof surface
-      let tempRoom = 23;                 // Target HVAC set point
+      const roofType = projectState.roofType;
+
+      let tempClassic = isMed ? 82 : 72; // Schwarzes Dach im Sommer
+      let tempAir = isMed ? 38 : 33;     // Außenlufttemperatur
+      // Intensivdach kühlt stärker durch mehr Verdunstung und Biomasse
+      let tempGreen = roofType === 'ekstenzivni' ? 29 : roofType === 'einfach-intensiv' ? 27 : 25;
+      let tempRoom = 23;                 // Ziel-Innentemperatur
       
       document.getElementById('temp-lbl-classic').textContent = tempClassic + ' °C';
       document.getElementById('temp-lbl-air').textContent = tempAir + ' °C';
@@ -1789,16 +1871,21 @@
         if (f === 'all') return true;
         return b.tip_biljke === f;
       });
-      
+
       grid.innerHTML = filtered.map(b => {
         const regOk = b.klima === projectState.region || b.klima === 'oboje';
-        const typeOk = b.tip_krova === projectState.roofType || b.tip_krova === 'oba';
+        const typeOk = isTypeCompatible(b, projectState.roofType);
         const compatible = regOk && typeOk;
-        
+
         let incompatReason = "";
         if (!compatible) {
-          if (!regOk) incompatReason = b.klima === 'mediteranska' ? "Nur Mediterran" : "Nur Kontinental";
-          else if (!typeOk) incompatReason = b.tip_krova === 'ekstenzivni' ? "Extensivdach erforderlich" : "Intensivdach erforderlich";
+          if (!regOk) {
+            incompatReason = b.klima === 'mediteranska' ? "Nur Mediterran" : "Nur Kontinental";
+          } else {
+            if (b.tip_krova === 'ekstenzivni') incompatReason = "Nur Extensivdach";
+            else if (projectState.roofType === 'ekstenzivni' && b.tip_krova === 'intenzivni') incompatReason = "Intensivdach erf.";
+            else incompatReason = "Substrat zu tief";
+          }
         }
         
         const isSelected = projectState.customSelected.has(b.id);
@@ -1912,13 +1999,14 @@
       document.getElementById('btn-apply-custom-mix').disabled = false;
       
       const warnings = [];
-      const isExt = projectState.roofType === 'ekstenzivni';
       const isMed = projectState.region === 'mediteranska';
-      
-      if (isExt) {
-        const deepNeed = selected.filter(p => getMinSubstrateDepth(p) > 10);
+      const cfg = ROOF_CONFIG[projectState.roofType];
+
+      if (projectState.roofType !== 'intenzivni') {
+        const deepNeed = selected.filter(p => getMinSubstrateDepth(p) > cfg.maxSubDepth);
         if (deepNeed.length > 0) {
-          warnings.push(`<strong>⚠️ Substrat zu flach:</strong> ${deepNeed.map(p => p.ime_hr).join(', ')} benötigen mehr als 10 cm Substrat. Es wird empfohlen, den Dachtyp auf Intensivdach umzustellen.`);
+          const nextType = projectState.roofType === 'ekstenzivni' ? 'Einfach-Intensivdach oder Intensivdach' : 'Intensivdach';
+          warnings.push(`<strong>⚠️ Substrat zu flach:</strong> ${deepNeed.map(p => p.ime_hr).join(', ')} benötigen mehr als ${cfg.maxSubDepth} cm Substrat. Es wird empfohlen, den Dachtyp auf ${nextType} umzustellen.`);
         }
       }
 
